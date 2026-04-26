@@ -289,9 +289,8 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
 
         for (const [objectIri, subjects] of byObject) {
             const subjectArray = [...subjects];
-            const objectTerm =
-                [...index.getObjects(propertyIri, subjectArray[0]?.value ?? '')].find(obj => obj.value === objectIri)
-                ?? namedNode(objectIri);
+            const firstSubject = subjectArray[0] as rdfjs.Quad_Subject;
+            const objectTerm = [...index.getObjects(propertyIri, firstSubject.value)].find(obj => obj.value === objectIri) as rdfjs.Quad_Object;
 
             for (let i = 0; i < subjectArray.length; i++) {
                 for (let j = i + 1; j < subjectArray.length; j++) {

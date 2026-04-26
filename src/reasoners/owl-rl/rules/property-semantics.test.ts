@@ -6,7 +6,7 @@ import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
-import { propertyJoin } from './property-semantics.js';
+import { propertyJoin, propertySingleQuad } from './property-semantics.js';
 import { TripleIndex } from '../../reasoner.js';
 
 const { namedNode, quad, blankNode } = DataFactory;
@@ -220,6 +220,21 @@ describe('prp-fp', () => {
         );
         expect(hasTriple(result, y.value, owlSameAs.value, y.value)).toBe(false);
     });
+
+    it('p type FunctionalProperty with reverse differentFrom evidence → different subjects become differentFrom', () => {
+        const x1 = namedNode('urn:x1');
+        const x2 = namedNode('urn:x2');
+        const y1 = namedNode('urn:y1');
+        const y2 = namedNode('urn:y2');
+        const result = infer(
+            quad(p, rdfType, owlFunctional, g),
+            quad(y1, p, x1, g),
+            quad(y2, p, x2, g),
+            quad(x2, namedNode('http://www.w3.org/2002/07/owl#differentFrom'), x1, g),
+        );
+
+        expect(hasTriple(result, y1.value, 'http://www.w3.org/2002/07/owl#differentFrom', y2.value)).toBe(true);
+    });
 });
 
 describe('prp-ifp', () => {
@@ -233,6 +248,22 @@ describe('prp-ifp', () => {
             hasTriple(result, y.value, owlSameAs.value, z.value) ||
             hasTriple(result, z.value, owlSameAs.value, y.value)
         ).toBe(true);
+    });
+
+    it('p type InverseFunctionalProperty with reverse differentFrom evidence → objects become differentFrom', () => {
+        const x1 = namedNode('urn:ifp-x1');
+        const x2 = namedNode('urn:ifp-x2');
+        const y1 = namedNode('urn:ifp-y1');
+        const y2 = namedNode('urn:ifp-y2');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const result = infer(
+            quad(p, rdfType, owlInvFunctional, g),
+            quad(y1, p, x1, g),
+            quad(y2, p, x2, g),
+            quad(y2, owlDifferentFrom, y1, g),
+        );
+
+        expect(hasTriple(result, x1.value, owlDifferentFrom.value, x2.value)).toBe(true);
     });
 });
 
@@ -398,6 +429,106 @@ describe('prp-adp (AllDisjointProperties)', () => {
             quad(x, p, y, g),
         );
         expect(isInconsistent(result)).toBe(false);
+    });
+
+    it('AllDisjointProperties with distinct blank-node objects → infer differentFrom between blanks', () => {
+        const owlADP = namedNode('http://www.w3.org/2002/07/owl#AllDisjointProperties');
+        const adp = blankNode('adp-blanks');
+        const l1 = blankNode('adp-blanks-l1');
+        const l2 = blankNode('adp-blanks-l2');
+        const b1 = blankNode('b1');
+        const b2 = blankNode('b2');
+        const result = infer(
+            quad(adp, rdfType, owlADP, g),
+            quad(adp, namedNode('http://www.w3.org/2002/07/owl#members'), l1, g),
+            quad(l1, rdfFirst, p, g),
+            quad(l1, rdfRest, l2, g),
+            quad(l2, rdfFirst, p2, g),
+            quad(l2, rdfRest, rdfNil, g),
+            quad(x, p, b1, g),
+            quad(x, p2, b2, g),
+        );
+
+        expect(hasTriple(result, b1.value, 'http://www.w3.org/2002/07/owl#differentFrom', b2.value)).toBe(true);
+    });
+});
+
+describe('prp-pdw distinct blank-node objects', () => {
+    it('p1 propertyDisjointWith p2, x p1 _:b1, x p2 _:b2 → infer differentFrom between blanks', () => {
+        const b1 = blankNode('pdw-b1');
+        const b2 = blankNode('pdw-b2');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const result = infer(
+            quad(p, owlDisjProp, p2, g),
+            quad(x, p, b1, g),
+            quad(x, p2, b2, g),
+        );
+
+        expect(hasTriple(result, b1.value, owlDifferentFrom.value, b2.value)).toBe(true);
+    });
+});
+
+describe('prp-rflx blank node subject', () => {
+    it('blank node typed owl:Thing with reflexive property → infer blank self-triple', () => {
+        const reflexiveProperty = namedNode('urn:reflexive');
+        const instance = blankNode('thing-bn');
+        const result = infer(
+            quad(reflexiveProperty, rdfType, namedNode('http://www.w3.org/2002/07/owl#ReflexiveProperty'), g),
+            quad(instance, rdfType, owlThing, g),
+        );
+
+        expect(hasTriple(result, instance.value, reflexiveProperty.value, instance.value)).toBe(true);
+    });
+
+    it('literal typed as owl:Thing is ignored by the prp-rflx subject guard in propertySingleQuad', () => {
+        const reflexiveProperty = namedNode('urn:reflexive-literal');
+        const lit = DataFactory.literal('not-a-node');
+        const index = new TripleIndex();
+
+        index.add(quad(reflexiveProperty, rdfType, namedNode('http://www.w3.org/2002/07/owl#ReflexiveProperty'), g));
+
+        const result = [...propertySingleQuad(quad(lit as unknown as rdfjs.Quad_Subject, rdfType, owlThing, g), index)];
+
+        expect(result.some(entry => entry.rule === 'prp-rflx')).toBe(false);
+    });
+});
+
+describe('prp-pdw non-node object guard', () => {
+    it('p1 propertyDisjointWith p2 with two distinct literals does not infer differentFrom', () => {
+        const lit1 = DataFactory.literal('l1');
+        const lit2 = DataFactory.literal('l2');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const result = infer(
+            quad(p, owlDisjProp, p2, g),
+            quad(x, p, lit1, g),
+            quad(x, p2, lit2, g),
+        );
+
+        expect(hasTriple(result, lit1.value, owlDifferentFrom.value, lit2.value)).toBe(false);
+    });
+});
+
+describe('prp-adp non-node object guard', () => {
+    it('AllDisjointProperties with two distinct literals does not infer differentFrom', () => {
+        const owlADP = namedNode('http://www.w3.org/2002/07/owl#AllDisjointProperties');
+        const adp = blankNode('adp-lit');
+        const l1 = blankNode('adp-lit-l1');
+        const l2 = blankNode('adp-lit-l2');
+        const lit1 = DataFactory.literal('lit-a');
+        const lit2 = DataFactory.literal('lit-b');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const result = infer(
+            quad(adp, rdfType, owlADP, g),
+            quad(adp, namedNode('http://www.w3.org/2002/07/owl#members'), l1, g),
+            quad(l1, rdfFirst, p, g),
+            quad(l1, rdfRest, l2, g),
+            quad(l2, rdfFirst, p2, g),
+            quad(l2, rdfRest, rdfNil, g),
+            quad(x, p, lit1, g),
+            quad(x, p2, lit2, g),
+        );
+
+        expect(hasTriple(result, lit1.value, owlDifferentFrom.value, lit2.value)).toBe(false);
     });
 });
 
@@ -625,5 +756,77 @@ describe('prp coverage edge cases', () => {
         );
         const isInconsistent = hasTriple(result, owlThing.value, rdfsSubClassOf.value, owlNothing.value);
         expect(isInconsistent).toBe(false);
+    });
+
+    it('propertyJoin covers reverse differentFrom lookup for functional-property contrapositive', () => {
+        const x1 = namedNode('urn:direct-x1');
+        const x2 = namedNode('urn:direct-x2');
+        const y1 = namedNode('urn:direct-y1');
+        const y2 = namedNode('urn:direct-y2');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const index = new TripleIndex();
+
+        for (const q of [
+            quad(p, rdfType, owlFunctional, g),
+            quad(y1, p, x1, g),
+            quad(y2, p, x2, g),
+            quad(x2, owlDifferentFrom, x1, g),
+        ]) {
+            index.add(q);
+        }
+
+        const result = [...propertyJoin(index)];
+        expect(hasTriple(result.map(entry => entry.quad), y1.value, owlDifferentFrom.value, y2.value)).toBe(true);
+    });
+
+    it('propertyJoin covers reverse differentFrom lookup for inverse-functional contrapositive', () => {
+        const x1 = namedNode('urn:direct-ifp-x1');
+        const x2 = namedNode('urn:direct-ifp-x2');
+        const y1 = namedNode('urn:direct-ifp-y1');
+        const y2 = namedNode('urn:direct-ifp-y2');
+        const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
+        const index = new TripleIndex();
+
+        for (const q of [
+            quad(p, rdfType, owlInvFunctional, g),
+            quad(y1, p, x1, g),
+            quad(y2, p, x2, g),
+            quad(y2, owlDifferentFrom, y1, g),
+        ]) {
+            index.add(q);
+        }
+
+        const result = [...propertyJoin(index)];
+        expect(hasTriple(result.map(entry => entry.quad), x1.value, owlDifferentFrom.value, x2.value)).toBe(true);
+    });
+
+    it('propertyJoin covers functional-property contrapositive fallthrough when no differentFrom triple exists', () => {
+        const index = new TripleIndex();
+
+        for (const q of [
+            quad(p, rdfType, owlFunctional, g),
+            quad(namedNode('urn:null-y1'), p, namedNode('urn:null-x1'), g),
+            quad(namedNode('urn:null-y2'), p, namedNode('urn:null-x2'), g),
+        ]) {
+            index.add(q);
+        }
+
+        const result = [...propertyJoin(index)];
+        expect(result.some(entry => entry.rule === 'prp-fp-dif')).toBe(false);
+    });
+
+    it('propertyJoin covers inverse-functional contrapositive fallthrough when no differentFrom triple exists', () => {
+        const index = new TripleIndex();
+
+        for (const q of [
+            quad(p, rdfType, owlInvFunctional, g),
+            quad(namedNode('urn:null-ifp-y1'), p, namedNode('urn:null-ifp-x1'), g),
+            quad(namedNode('urn:null-ifp-y2'), p, namedNode('urn:null-ifp-x2'), g),
+        ]) {
+            index.add(q);
+        }
+
+        const result = [...propertyJoin(index)];
+        expect(result.some(entry => entry.rule === 'prp-ifp-dif')).toBe(false);
     });
 });

@@ -6,6 +6,8 @@ import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
+import { TripleIndex } from '../../reasoner.js';
+import { equalityJoin } from './equality.js';
 
 const { namedNode, quad, literal, blankNode } = DataFactory;
 
@@ -139,6 +141,22 @@ describe('eq-diff2', () => {
         expect(isInconsistent(result)).toBe(true);
     });
 
+    it('AllDifferent with distinctMembers, reverse sameAs pair → inconsistency', () => {
+        const list = blankNode('dl-rev');
+        const tail = blankNode('dtail-rev');
+        const ad = blankNode('dad-rev');
+        const result = infer(
+            quad(ad, rdfType, allDiff, g),
+            quad(ad, distMembers, list, g),
+            quad(list, rdfFirst, A, g),
+            quad(list, rdfRest, tail, g),
+            quad(tail, rdfFirst, B, g),
+            quad(tail, rdfRest, rdfNil, g),
+            quad(B, sameAs, A, g),
+        );
+        expect(isInconsistent(result)).toBe(true);
+    });
+
     it('AllDifferent with distinct members, no sameAs → no inconsistency', () => {
         const list = blankNode('ll');
         const tail = blankNode('lt');
@@ -177,5 +195,27 @@ describe('eq-diff2', () => {
             // emptyList has no rdf:first → walkList returns []
         );
         expect(isInconsistent(result)).toBe(false);
+    });
+
+    it('equalityJoin covers reverse sameAs lookup for allDifferent members', () => {
+        const list = blankNode('direct-dl');
+        const tail = blankNode('direct-dtail');
+        const ad = blankNode('direct-ad');
+        const index = new TripleIndex();
+
+        for (const q of [
+            quad(ad, rdfType, allDiff, g),
+            quad(ad, distMembers, list, g),
+            quad(list, rdfFirst, A, g),
+            quad(list, rdfRest, tail, g),
+            quad(tail, rdfFirst, B, g),
+            quad(tail, rdfRest, rdfNil, g),
+            quad(B, sameAs, A, g),
+        ]) {
+            index.add(q);
+        }
+
+        const results = [...equalityJoin(index)];
+        expect(results.some(result => result.rule === 'eq-diff3')).toBe(true);
     });
 });
