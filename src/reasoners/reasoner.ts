@@ -35,18 +35,35 @@ export interface InferenceResult {
     antecedents: rdfjs.Quad[];
 }
 
-/**
- * A fully resolved provenance record: the derived quad, the rule that produced it,
- * and recursively resolved antecedents.
- *
- * Source triples bottom out with `rule: 'source'` and `antecedents: []`.
- * Axiomatic triples bottom out with `rule: 'axiom'` and `antecedents: []`.
- */
-export interface ProvenanceRecord {
-    quad: rdfjs.Quad;
-    rule: string;
-    antecedents: ProvenanceRecord[];
+/** A source triple that came directly from the input dataset. */
+export interface SourceRecord {
+    origin: 'source';
+    triple: rdfjs.Quad;
 }
+
+/** A profile axiom seeded into the index before inference began. */
+export interface AxiomRecord {
+    origin: 'axiom';
+    triple: rdfjs.Quad;
+}
+
+/** A triple produced by applying a named OWL RL rule to its premises. */
+export interface InferredRecord {
+    origin: 'inferred';
+    triple: rdfjs.Quad;
+    rule: string;
+    ruleDescription?: string;
+    premises: ProvenanceRecord[];
+}
+
+/**
+ * A node in a provenance explanation tree.
+ *
+ * - `SourceRecord`  — leaf: the triple came directly from the input dataset.
+ * - `AxiomRecord`   — leaf: the triple is a profile axiom.
+ * - `InferredRecord` — branch: the triple was derived by a named OWL RL rule from its premises.
+ */
+export type ProvenanceRecord = SourceRecord | AxiomRecord | InferredRecord;
 
 /** Predicate used to match inferred quads of interest (e.g. inconsistency markers). */
 export type InferredQuadMatcher = (quad: rdfjs.Quad) => boolean;
@@ -54,6 +71,34 @@ export type InferredQuadMatcher = (quad: rdfjs.Quad) => boolean;
 /** Optional controls for expansion workflows. */
 export interface ExpandOptions {
     stopWhen?: InferredQuadMatcher;
+}
+
+/** SHACL-like severity levels for reasoner report entries. */
+export type ReportSeverity = 'Violation' | 'Warning' | 'Info';
+
+/** Optional controls for report workflows. */
+export interface ReportOptions {
+    /** Graph where inferred triples are intended to be written by the caller. */
+    targetGraph?: rdfjs.Quad_Graph;
+}
+
+/**
+ * A SHACL-inspired report result entry for one reasoning outcome.
+ *
+ * Compact top-level fields keep graph context and severity.
+ * Triple/rule/message details are contained in `detail`.
+ */
+export interface ReasoningReportResult {
+    sourceGraph: rdfjs.Quad_Graph;
+    targetGraph: rdfjs.Quad_Graph;
+    severity: ReportSeverity;
+    detail: ProvenanceRecord;
+}
+
+/** A SHACL-inspired report wrapper for reasoning outcomes. */
+export interface ReasoningReport {
+    consistent: boolean;
+    results: ReasoningReportResult[];
 }
 
 /**
@@ -195,11 +240,11 @@ export abstract class ReasonerBase implements Reasoner {
         const targetKey = quadKey(normalizedTarget);
         const provenanceMap = new Map<string, ProvenanceRecord>();
 
-        const resolveAntecedents = (antecedents: rdfjs.Quad[]): ProvenanceRecord[] => {
+        const resolvePremises = (antecedents: rdfjs.Quad[]): ProvenanceRecord[] => {
             return antecedents.map(ant => {
                 const key = quadKey(createQuad(ant.subject, ant.predicate, ant.object, defaultGraphTerm));
 
-                return provenanceMap.get(key) ?? { quad: ant, rule: 'source', antecedents: [] };
+                return provenanceMap.get(key) ?? { origin: 'source', triple: ant };
             });
         };
 
@@ -207,7 +252,7 @@ export abstract class ReasonerBase implements Reasoner {
             const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
 
             if (index.add(n)) {
-                const record: ProvenanceRecord = { quad: n, rule: 'source', antecedents: [] };
+                const record: ProvenanceRecord = { origin: 'source', triple: n };
 
                 provenanceMap.set(quadKey(n), record);
 
@@ -219,7 +264,7 @@ export abstract class ReasonerBase implements Reasoner {
             const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
 
             if (index.add(n)) {
-                const record: ProvenanceRecord = { quad: n, rule: 'axiom', antecedents: [] };
+                const record: ProvenanceRecord = { origin: 'axiom', triple: n };
 
                 provenanceMap.set(quadKey(n), record);
 
@@ -246,10 +291,13 @@ export abstract class ReasonerBase implements Reasoner {
 
                     if (index.add(n)) {
                         const key = quadKey(n);
+                        const ruleDescription = this.getRuleDescription(result.rule);
                         const record: ProvenanceRecord = {
-                            quad: n,
+                            origin: 'inferred',
+                            triple: n,
                             rule: result.rule,
-                            antecedents: resolveAntecedents(result.antecedents),
+                            ...(ruleDescription ? { ruleDescription } : {}),
+                            premises: resolvePremises(result.antecedents),
                         };
 
                         provenanceMap.set(key, record);
@@ -268,10 +316,13 @@ export abstract class ReasonerBase implements Reasoner {
 
                 if (index.add(n)) {
                     const key = quadKey(n);
+                    const ruleDescription = this.getRuleDescription(result.rule);
                     const record: ProvenanceRecord = {
-                        quad: n,
+                        origin: 'inferred',
+                        triple: n,
                         rule: result.rule,
-                        antecedents: resolveAntecedents(result.antecedents),
+                        ...(ruleDescription ? { ruleDescription } : {}),
+                        premises: resolvePremises(result.antecedents),
                     };
 
                     provenanceMap.set(key, record);
@@ -314,11 +365,11 @@ export abstract class ReasonerBase implements Reasoner {
 
         const provenanceMap = new Map<string, ProvenanceRecord>();
 
-        function resolveAntecedents(antecedents: rdfjs.Quad[]): ProvenanceRecord[] {
+        function resolvePremises(antecedents: rdfjs.Quad[]): ProvenanceRecord[] {
             return antecedents.map(ant => {
                 const key = quadKey(createQuad(ant.subject, ant.predicate, ant.object, defaultGraphTerm));
 
-                return provenanceMap.get(key) ?? { quad: ant, rule: 'source', antecedents: [] };
+                return provenanceMap.get(key) ?? { origin: 'source', triple: ant };
             });
         }
 
@@ -327,7 +378,7 @@ export abstract class ReasonerBase implements Reasoner {
             const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
 
             if (index.add(n)) {
-                provenanceMap.set(quadKey(n), { quad: n, rule: 'source', antecedents: [] });
+                provenanceMap.set(quadKey(n), { origin: 'source', triple: n });
             }
         }
 
@@ -336,7 +387,7 @@ export abstract class ReasonerBase implements Reasoner {
             const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
 
             if (index.add(n)) {
-                provenanceMap.set(quadKey(n), { quad: n, rule: 'axiom', antecedents: [] });
+                provenanceMap.set(quadKey(n), { origin: 'axiom', triple: n });
             }
         }
 
@@ -362,10 +413,13 @@ export abstract class ReasonerBase implements Reasoner {
                     const n = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
 
                     if (index.add(n)) {
+                        const ruleDescription = this.getRuleDescription(result.rule);
                         const record: ProvenanceRecord = {
-                            quad: n,
+                            origin: 'inferred',
+                            triple: n,
                             rule: result.rule,
-                            antecedents: resolveAntecedents(result.antecedents),
+                            ...(ruleDescription ? { ruleDescription } : {}),
+                            premises: resolvePremises(result.antecedents),
                         };
                         provenanceMap.set(quadKey(n), record);
                         inferredRecords.push(record);
@@ -378,10 +432,13 @@ export abstract class ReasonerBase implements Reasoner {
                 const n = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
 
                 if (index.add(n)) {
+                    const ruleDescription = this.getRuleDescription(result.rule);
                     const record: ProvenanceRecord = {
-                        quad: n,
+                        origin: 'inferred',
+                        triple: n,
                         rule: result.rule,
-                        antecedents: resolveAntecedents(result.antecedents),
+                        ...(ruleDescription ? { ruleDescription } : {}),
+                        premises: resolvePremises(result.antecedents),
                     };
                     provenanceMap.set(quadKey(n), record);
                     inferredRecords.push(record);
@@ -397,16 +454,88 @@ export abstract class ReasonerBase implements Reasoner {
 
     /**
      * Apply inference over the source graph and return a provenance record for
-     * every inferred triple.  Each record contains the derived quad, the name of
-     * the OWL RL rule that produced it, and a recursively resolved list of
-     * antecedent records that chains all the way back to source triples
-     * (`rule: 'source'`) and profile axioms (`rule: 'axiom'`).
+        * every inferred triple. Each inferred record contains the derived triple,
+        * the rule id, an optional human-readable ruleDescription, and recursively
+        * resolved premises that chain back to source and axiom leaf records.
      *
      * When the same quad is derivable by multiple paths only the first derivation
      * (earliest fixpoint round) is recorded.
      */
     expandWithProvenance(store: rdfjs.DatasetCore, sourceGraph: rdfjs.Quad_Graph): ProvenanceRecord[] {
         return this.provenanceForAll(store, sourceGraph);
+    }
+
+    /**
+     * Build one SHACL-inspired report result for a specific target quad.
+     *
+     * The result contains source/target graph context, severity, and a detailed
+     * provenance record for explainability.
+     */
+    reportFor(
+        store: rdfjs.DatasetCore,
+        sourceGraph: rdfjs.Quad_Graph,
+        target: rdfjs.Quad,
+        options?: ReportOptions,
+    ): ReasoningReportResult | undefined {
+        const detail = this.provenanceFor(store, sourceGraph, target);
+
+        if (!detail) {
+            return undefined;
+        }
+
+        const targetGraph = options?.targetGraph ?? sourceGraph;
+        return this.toReportResult(detail, sourceGraph, targetGraph);
+    }
+
+    /**
+     * Build a SHACL-inspired report for all inferred outcomes.
+     *
+     * `consistent` is true when no result has severity `Violation`.
+     */
+    reportForAll(
+        store: rdfjs.DatasetCore,
+        sourceGraph: rdfjs.Quad_Graph,
+        options?: ReportOptions,
+    ): ReasoningReport {
+        const targetGraph = options?.targetGraph ?? sourceGraph;
+        const results = this.provenanceForAll(store, sourceGraph).map(record =>
+            this.toReportResult(record, sourceGraph, targetGraph),
+        );
+
+        const consistent = !results.some(r => r.severity === 'Violation');
+        return { consistent, results };
+    }
+
+    /** Optional short human-readable text for a rule id (e.g. from profile specs). */
+    protected getRuleDescription(_rule: string): string | undefined {
+        return undefined;
+    }
+
+    /** Severity policy for inferred provenance nodes. Override in subclasses. */
+    protected getSeverity(_record: InferredRecord): ReportSeverity {
+        return 'Info';
+    }
+
+    private toReportResult(
+        detail: ProvenanceRecord,
+        sourceGraph: rdfjs.Quad_Graph,
+        targetGraph: rdfjs.Quad_Graph,
+    ): ReasoningReportResult {
+        if (detail.origin === 'inferred') {
+            return {
+                sourceGraph,
+                targetGraph,
+                severity: this.getSeverity(detail),
+                detail,
+            };
+        }
+
+        return {
+            sourceGraph,
+            targetGraph,
+            severity: 'Info',
+            detail,
+        };
     }
 
     /**

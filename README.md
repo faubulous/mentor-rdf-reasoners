@@ -97,12 +97,16 @@ The reasoner now tracks derivation provenance as structured explanation trees.
 - `provenanceFor(store, sourceGraph, targetQuad)` returns the explanation for one derived quad.
 - `provenanceForAll(store, sourceGraph)` returns explanation records for all inferred quads.
 - `expandWithProvenance(store, sourceGraph)` is retained as a backward-compatible alias for `provenanceForAll(...)`.
+- `reportFor(store, sourceGraph, targetQuad, { targetGraph? })` returns a SHACL-inspired result entry.
+- `reportForAll(store, sourceGraph, { targetGraph? })` returns a SHACL-inspired report wrapper with `consistent` and `results`.
 
-Each explanation record contains:
+Each explanation record is a discriminated union:
 
-- `quad`: the derived triple
-- `rule`: the OWL RL rule that produced it, such as `prp-fp` or `eq-sym`
-- `antecedents`: recursively resolved source, axiom, or inferred records that justify the result
+- `SourceRecord`  — `{ origin: 'source', triple }` — leaf: the triple came directly from the input dataset
+- `AxiomRecord`   — `{ origin: 'axiom', triple }` — leaf: the triple is a profile axiom
+- `InferredRecord` — `{ origin: 'inferred', triple, rule, ruleDescription?, premises[] }` — branch: derived by a named OWL RL rule from its `premises`
+
+`rule` stays a stable machine-oriented id (for example `dt-diff`), while `ruleDescription` is a compact human-readable label (when known by the reasoner profile).
 
 Example: detect an inconsistency first, then explain only that marker.
 
@@ -140,29 +144,58 @@ Typical result shape:
 
 ```ts
 {
-  quad: owl:Thing rdfs:subClassOf owl:Nothing,
+  origin: 'inferred',
+  triple: owl:Thing rdfs:subClassOf owl:Nothing,
   rule: 'dt-diff',
-  antecedents: [
-    {
-      quad: :p rdf:type owl:FunctionalProperty,
-      rule: 'source',
-      antecedents: []
-    },
-    {
-      quad: :a :p "v1",
-      rule: 'source',
-      antecedents: []
-    },
-    {
-      quad: :a :p "v2",
-      rule: 'source',
-      antecedents: []
-    }
+  ruleDescription: 'Different literal values for a functional data property.',
+  premises: [
+    { origin: 'source', triple: :p rdf:type owl:FunctionalProperty },
+    { origin: 'source', triple: :a :p "v1" },
+    { origin: 'source', triple: :a :p "v2" }
   ]
 }
 ```
 
 This gives direct explainability down to the source triples that triggered the inconsistency, without requiring callers to reverse-engineer the cause from the inferred graph.
+
+### SHACL-inspired report format
+
+For tools that want a validator-style output, the reasoner also exposes a SHACL-inspired format:
+
+- `sourceGraph`: graph read by the reasoner
+- `targetGraph`: graph where inferred triples are intended to be written
+- `severity`: `Violation | Warning | Info`
+- `detail`: full provenance record (includes triple terms, rule id, and message)
+
+```ts
+const report = reasoner.reportForAll(store, sourceGraph, {
+  targetGraph: namedNode('https://example.org/my-ontology/inferred')
+});
+
+console.log(report.consistent); // false when at least one Violation exists
+console.dir(report.results[0], { depth: null });
+```
+
+Typical result shape:
+
+```ts
+{
+  sourceGraph: 'https://example.org/my-ontology',
+  targetGraph: 'https://example.org/my-ontology/inferred',
+  severity: 'Violation',
+  detail: {
+    origin: 'inferred',
+    triple: owl:Thing rdfs:subClassOf owl:Nothing,
+    rule: 'dt-diff',
+    ruleDescription: 'Different literal values for a functional data property.',
+    premises: [
+      { origin: 'source', triple: :p rdf:type owl:FunctionalProperty },
+      { origin: 'source', triple: :a :p "v1" },
+      { origin: 'source', triple: :a :p "v2" }
+    ]
+  }
+}
+```
 
 Current limitation: provenance is exposed as TypeScript data structures, not as RDF explanation triples. If you need explanation graphs that can be queried or stored as RDF, that would be a separate serialization layer on top of `ProvenanceRecord`.
 
