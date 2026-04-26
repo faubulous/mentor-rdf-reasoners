@@ -1,0 +1,66 @@
+{
+  "name": "@faubulous/mentor-rdf-reasoners",
+  "description": "OWL RL and RDFS reasoners for the Mentor RDF toolkit.",
+  "keywords": [
+    "rdf",
+    "owl",
+    "rdfs",
+    "reasoner",
+    "inference",
+    "owl-rl",
+    "ontology",
+    "typescript"
+  ],
+  "version": "0.1.0",
+  "private": false,
+  "author": {
+    "name": "Sebastian Faubel"
+  },
+  "license": "LGPL-2.1-or-later",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faubulous/mentor-rdf-reasoners.git"
+  },
+  "bugs": {
+    "url": "https://github.com/faubulous/mentor-rdf-reasoners/issues"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "bench": "vitest bench --run",
+    "bench:stable": "vitest bench --run",
+    "bench:baseline": "node scripts/run-bench-baseline.mjs",
+    "bench:watch": "vitest bench",
+    "build": "tsc",
+    "check:pack": "npm pack --dry-run",
+    "ci:quality": "npm run typecheck && npm test && npm run build && npm run check:pack",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@faubulous/mentor-rdf-parsers": "^1.7.3",
+    "@rdfjs/data-model": "^2.1.1",
+    "rdf-stores": "^2.2.0"
+  },
+  "devDependencies": {
+    "@rdfjs/types": "^2.0.1",
+    "@types/rdfjs__data-model": "^2.0.9",
+    "@vitest/coverage-v8": "^4.1.5",
+    "typedoc": "^0.28.19",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

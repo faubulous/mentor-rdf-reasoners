@@ -1,0 +1,1082 @@
+[
+  {
+    "id": "DisjointClasses-001",
+    "iri": "http://owl.semanticweb.org/id/DisjointClasses-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates a binary disjoint classes axiom based on example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Girl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Boy> .\n_:N7f1a980d4b244f518bdf6f7c7bf51147 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Boy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Boy> <http://www.w3.org/2002/07/owl#disjointWith> <http://example.org/Girl> .\n\n",
+    "conclusionNTriples": "<http://example.org/Girl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ne159357b5132426ba04663dd50d7fccd <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:Ne159357b5132426ba04663dd50d7fccd .\n_:N76e14595f874418193a2aea6e262bf3b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Ne159357b5132426ba04663dd50d7fccd <http://www.w3.org/2002/07/owl#complementOf> <http://example.org/Girl> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "DisjointClasses-002",
+    "iri": "http://owl.semanticweb.org/id/DisjointClasses-2D002",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates a binary disjoint classes axiom and class assertions causing an inconsistency based on example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Girl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Boy> .\n<http://example.org/Boy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nbc7d79683ae847ac9f2ca11ddc600710 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Boy> <http://www.w3.org/2002/07/owl#disjointWith> <http://example.org/Girl> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Girl> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "DisjointClasses-003",
+    "iri": "http://owl.semanticweb.org/id/DisjointClasses-2D003",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A modification of test DisjointClasses-001 to demonstrate a ternary disjoint classes axiom.",
+    "premiseNTriples": "<http://example.org/Girl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N4eb4df42e81f44b48eac174429045865 <http://www.w3.org/2002/07/owl#members> _:N82bb942b2afa4ffd9be3ca72d9beff2b .\n<http://example.org/Boy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N1372370c18794e91aa3396d184d0d012 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N82bb942b2afa4ffd9be3ca72d9beff2b <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Boy> .\n<http://example.org/Dog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Boy> .\n_:N08777039e9b84910a04c9a810e043484 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Ne52b342371fc4c1da96c019b8f18c121 .\n_:Ne52b342371fc4c1da96c019b8f18c121 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Dog> .\n_:Ne52b342371fc4c1da96c019b8f18c121 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N4eb4df42e81f44b48eac174429045865 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDisjointClasses> .\n_:N08777039e9b84910a04c9a810e043484 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Girl> .\n_:N82bb942b2afa4ffd9be3ca72d9beff2b <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N08777039e9b84910a04c9a810e043484 .\n\n",
+    "conclusionNTriples": "<http://example.org/Girl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:N37187c1443b94259bae1511ba5134aff .\n_:N706e1987f1934a6b8503470ed918daf0 <http://www.w3.org/2002/07/owl#complementOf> <http://example.org/Dog> .\n<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:N706e1987f1934a6b8503470ed918daf0 .\n_:N37187c1443b94259bae1511ba5134aff <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Dog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ndc4633274ded4a6ab1b1185ff0a5e900 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N706e1987f1934a6b8503470ed918daf0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N37187c1443b94259bae1511ba5134aff <http://www.w3.org/2002/07/owl#complementOf> <http://example.org/Girl> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "FS2RDF-different-individuals-2-ar",
+    "iri": "http://owl.semanticweb.org/id/FS2RDF-2Ddifferent-2Dindividuals-2D2-2Dar",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Functional syntax to RDFXML translation of ontology consisting of a 2 argument DifferentIndividuals",
+    "premiseNTriples": "_:N369a0e6149f740059f0207f2072deef6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/a> <http://www.w3.org/2002/07/owl#differentFrom> <http://example.org/b> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "FS2RDF-different-individuals-3-ar",
+    "iri": "http://owl.semanticweb.org/id/FS2RDF-2Ddifferent-2Dindividuals-2D3-2Dar",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Functional syntax to RDFXML translation of ontology consisting of a 3 argument DifferentIndividuals",
+    "premiseNTriples": "_:Nc217ecdb7ebd49e5b41462363a95e533 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N6aab1d551ec5495db163c6b0e38868ec <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/a> .\n_:N6aab1d551ec5495db163c6b0e38868ec <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Ne7da367b129e42c2a115ced245acf30f .\n_:Ne7da367b129e42c2a115ced245acf30f <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Nb535ac8ce8a74f6a809a7a42beee7dfe .\n_:Ne7da367b129e42c2a115ced245acf30f <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/b> .\n_:Nb535ac8ce8a74f6a809a7a42beee7dfe <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/c> .\n_:N873243a067744f989aafad9d8c1a464e <http://www.w3.org/2002/07/owl#members> _:N6aab1d551ec5495db163c6b0e38868ec .\n_:Nb535ac8ce8a74f6a809a7a42beee7dfe <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N873243a067744f989aafad9d8c1a464e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDifferent> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "FS2RDF-no-builtin-prefixes-ar",
+    "iri": "http://owl.semanticweb.org/id/FS2RDF-2Dno-2Dbuiltin-2Dprefixes-2Dar",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Functional syntax to RDFXML checking that there aren't builtin prefixes for xsd, rdf, rdfs, owl",
+    "premiseNTriples": "_:N729f70517d0a4784a55b033a865201f7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/a> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/b> .\n<http://example.org/d> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/e> .\n<http://example.org/c> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/d> .\n<http://example.org/b> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/c> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "FS2RDF-same-individual-2-ar",
+    "iri": "http://owl.semanticweb.org/id/FS2RDF-2Dsame-2Dindividual-2D2-2Dar",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Functional syntax to RDFXML translation of ontology consisting of a 2 argument SameIndividual",
+    "premiseNTriples": "_:N20f05dd3dec4476d82adb1f758407e72 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/a> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/b> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-AnnotationAnnotations-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DAnnotationAnnotations-2D001",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates annotation of an annotation.  Adapted from an example in the Mapping to RDF Graphs document.",
+    "premiseNTriples": "<http://example.org/> <http://www.w3.org/2000/01/rdf-schema#label> \"An example ontology\" .\n_:Nf987539cab5646bdba1bf7ed8d096b0c <http://www.w3.org/2002/07/owl#annotatedTarget> \"An example ontology\" .\n_:Nf987539cab5646bdba1bf7ed8d096b0c <http://www.w3.org/2002/07/owl#annotatedSource> <http://example.org/> .\n<http://example.org/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Nf987539cab5646bdba1bf7ed8d096b0c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Annotation> .\n_:Nf987539cab5646bdba1bf7ed8d096b0c <http://example.org/author> \"Mike Smith\" .\n<http://example.org/i> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n_:Nf987539cab5646bdba1bf7ed8d096b0c <http://www.w3.org/2002/07/owl#annotatedProperty> <http://www.w3.org/2000/01/rdf-schema#label> .\n<http://example.org/author> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-AsymmetricProperty-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DAsymmetricProperty-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of an asymmetric object property axiom to cause a trivial inconsistency based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Peter> <http://example.org/parentOf> <http://example.org/Stewie> .\n<http://example.org/Stewie> <http://example.org/parentOf> <http://example.org/Peter> .\n_:N413b108d1f7d4f769635a80d73e6b09f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/parentOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/parentOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AsymmetricProperty> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-AxiomAnnotations-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DAxiomAnnotations-2D001",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates axiom annotation based on an example in the Mapping to RDF Graphs document.  The axiom being annotated here generates a main triple when mapped to RDF.",
+    "premiseNTriples": "<http://example.org/Person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Na1535e6e684e408dbe0c1b0c5309aabd <http://www.w3.org/2002/07/owl#annotatedSource> <http://example.org/Child> .\n_:Na1535e6e684e408dbe0c1b0c5309aabd <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Axiom> .\n_:Na1535e6e684e408dbe0c1b0c5309aabd <http://www.w3.org/2002/07/owl#annotatedProperty> <http://www.w3.org/2000/01/rdf-schema#subClassOf> .\n_:Na1535e6e684e408dbe0c1b0c5309aabd <http://www.w3.org/2000/01/rdf-schema#comment> \"Children are people.\" .\n<http://example.org/Child> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ndad9d60d9d104497be0c05de46a7f970 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Na1535e6e684e408dbe0c1b0c5309aabd <http://www.w3.org/2002/07/owl#annotatedTarget> <http://example.org/Person> .\n<http://example.org/Child> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://example.org/Person> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-DisjointDataProperties-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DDisjointDataProperties-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a disjoint data properties axiom to create a trivial inconsistency based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "_:Nf0e08d43c0d145a6ada442e129df940b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/hasName> <http://www.w3.org/2002/07/owl#propertyDisjointWith> <http://example.org/hasAddress> .\n<http://example.org/Peter> <http://example.org/hasAddress> \"Peter Griffin\" .\n<http://example.org/hasAddress> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter Griffin\" .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-DisjointDataProperties-002",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DDisjointDataProperties-2D002",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a ternary disjoint data properties axiom to infer different individuals.  Adapted from test New-Feature-DisjointDataProperties-001.",
+    "premiseNTriples": "_:N078c2f002a004c9d947043c8834380b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDisjointProperties> .\n_:Nf52f95269c3d437994c47ee069c3dc1c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasName> .\n_:N0a723952644544c8ac1f108f53c266a8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/hasAddress> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n_:Ncf3f742265094957b9bd7ab286c959c4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Ne52e8e9ac1364c1db2342e12b6fab195 .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://example.org/Peter_Griffin> <http://example.org/hasAddress> \"Peter Griffin\" .\n_:Nf52f95269c3d437994c47ee069c3dc1c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Ncf3f742265094957b9bd7ab286c959c4 .\n_:N078c2f002a004c9d947043c8834380b0 <http://www.w3.org/2002/07/owl#members> _:Nf52f95269c3d437994c47ee069c3dc1c .\n_:Ncf3f742265094957b9bd7ab286c959c4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasAddress> .\n_:Ne52e8e9ac1364c1db2342e12b6fab195 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://example.org/Petre> <http://example.org/hasZip> \"Peter Griffin\" .\n<http://example.org/hasZip> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter Griffin\" .\n_:Ne52e8e9ac1364c1db2342e12b6fab195 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasZip> .\n\n",
+    "conclusionNTriples": "_:N2d31f367f1984cd39894428c8161439a <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Peter_Griffin> .\n_:N7b028aca06c1403c9f3e0d9f06fa9f42 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDifferent> .\n_:N2d31f367f1984cd39894428c8161439a <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Nc4c01413c32a41069fb01510f807e27b .\n_:N9b51baaf77884e0a880babf2773b474e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Nd03bd23ebb6948ffb018a3ad99e35c9c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N2d31f367f1984cd39894428c8161439a .\n_:Nd03bd23ebb6948ffb018a3ad99e35c9c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Peter> .\n_:Nc4c01413c32a41069fb01510f807e27b <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Petre> .\n_:N7b028aca06c1403c9f3e0d9f06fa9f42 <http://www.w3.org/2002/07/owl#members> _:Nd03bd23ebb6948ffb018a3ad99e35c9c .\n_:Nc4c01413c32a41069fb01510f807e27b <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-DisjointObjectProperties-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DDisjointObjectProperties-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a disjoint object properties axiom to infer that two individuals are different based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Stewie> <http://example.org/hasFather> <http://example.org/Peter> .\n<http://example.org/Stewie> <http://example.org/hasMother> <http://example.org/Lois> .\n_:Nf4d1e7eb5c074bf3a08172b926996e13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/hasFather> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/hasMother> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/hasFather> <http://www.w3.org/2002/07/owl#propertyDisjointWith> <http://example.org/hasMother> .\n\n",
+    "conclusionNTriples": "_:Ndd57f88b30b44f3aacc388597a8f34c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Peter> <http://www.w3.org/2002/07/owl#differentFrom> <http://example.org/Lois> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-DisjointObjectProperties-002",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DDisjointObjectProperties-2D002",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A modification of test New-Feature-DisjointObjectProperties-001 to demonstrate a ternary disjoint object properties axiom.",
+    "premiseNTriples": "_:N5cad4267806a433399a4cf2bcb653454 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasFather> .\n_:N6c80c87ffd9f462bb864ba19880aa0bd <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N7ede95f49d9f4a018acfc013d878284e <http://www.w3.org/2002/07/owl#members> _:N5cad4267806a433399a4cf2bcb653454 .\n_:N5cad4267806a433399a4cf2bcb653454 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N622487cf91274eacb5a22d64aa2d7fb4 .\n_:N622487cf91274eacb5a22d64aa2d7fb4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasMother> .\n<http://example.org/hasChild> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N9e72838cf1aa4c8d9291765117560298 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N7ede95f49d9f4a018acfc013d878284e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDisjointProperties> .\n<http://example.org/hasMother> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/Stewie> <http://example.org/hasChild> <http://example.org/StewieJr> .\n_:N622487cf91274eacb5a22d64aa2d7fb4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N6c80c87ffd9f462bb864ba19880aa0bd .\n<http://example.org/Stewie> <http://example.org/hasFather> <http://example.org/Peter> .\n<http://example.org/Stewie> <http://example.org/hasMother> <http://example.org/Lois> .\n_:N6c80c87ffd9f462bb864ba19880aa0bd <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasChild> .\n<http://example.org/hasFather> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "conclusionNTriples": "_:Na87e8362ce9444c59569abc05bb4aad2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N9f5c37f71583420d830d821d6da92cbc .\n_:N3f4090d83d9e4b529baeaae7d30a8c76 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Peter> .\n_:Nfcaed3b0d9d74932b5a03869600b08e5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N3f4090d83d9e4b529baeaae7d30a8c76 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Na87e8362ce9444c59569abc05bb4aad2 .\n_:N9f5c37f71583420d830d821d6da92cbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/StewieJr> .\n_:N9f5c37f71583420d830d821d6da92cbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Na87e8362ce9444c59569abc05bb4aad2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/Lois> .\n_:Ncc481e1389cf4328b23da09587e95a14 <http://www.w3.org/2002/07/owl#members> _:N3f4090d83d9e4b529baeaae7d30a8c76 .\n_:Ncc481e1389cf4328b23da09587e95a14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AllDifferent> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-IrreflexiveProperty-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DIrreflexiveProperty-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of an irreflexive object property axiom to cause a trivial inconsistency based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/marriedTo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#IrreflexiveProperty> .\n<http://example.org/Peter> <http://example.org/marriedTo> <http://example.org/Peter> .\n_:Nc455a1b5777d4e4bb7a7c42d68b5bd86 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/marriedTo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-Keys-003",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DKeys-2D003",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a \"localized\" key axiom to merge individuals based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Peter_Griffin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n_:Nf52108aa213d48129344a3c14878fa84 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/2002/07/owl#hasKey> _:N06a3aeca06e04f2884b7945ba88d6267 .\n_:N06a3aeca06e04f2884b7945ba88d6267 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n_:N06a3aeca06e04f2884b7945ba88d6267 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasName> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/StPeter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter_Griffin> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n\n",
+    "conclusionNTriples": "_:Nd2e5ba5ad82e4bd6a6a437fba2401771 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Peter> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/Peter_Griffin> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-Keys-004",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DKeys-2D004",
+    "types": [
+      "ConsistencyTest",
+      "NegativeEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates that use of a \"localized\" key axiom only merges individuals that are instances of the given class expression.  Based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Peter_Griffin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/2002/07/owl#hasKey> _:Na524936830a344c0be9d035d4151dbac .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n_:Na524936830a344c0be9d035d4151dbac <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Na524936830a344c0be9d035d4151dbac <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasName> .\n<http://example.org/StPeter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter_Griffin> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n_:Na4d9b33f9e6d4530b6f32f48ec53ac79 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": "_:N531b529b1c8c47a38761446741db5d8f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Peter> <http://www.w3.org/2002/07/owl#sameAs> <http://example.org/StPeter> .\n\n"
+  },
+  {
+    "id": "New-Feature-Keys-005",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DKeys-2D005",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates that a key axiom does not make all properties used in it functional. Based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Peter> <http://example.org/hasName> \"Kichwa-Tembo\" .\n_:Nacf3ce0e79664da8a73813031f677a52 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n_:N88c488433cdd46cd80171022a892cb6c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasName> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/2002/07/owl#hasKey> _:N88c488433cdd46cd80171022a892cb6c .\n_:N88c488433cdd46cd80171022a892cb6c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-Keys-006",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DKeys-2D006",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates that a key axiom does not make all properties used in it functional, but these properties may be made functional with other axioms. Based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Peter> <http://example.org/hasName> \"Kichwa-Tembo\" .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/2002/07/owl#hasKey> _:N9086065e5a8a4697b8a4948e3c46f32c .\n<http://example.org/GriffinFamilyMember> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#FunctionalProperty> .\n_:N9086065e5a8a4697b8a4948e3c46f32c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N9086065e5a8a4697b8a4948e3c46f32c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasName> .\n<http://example.org/Peter> <http://example.org/hasName> \"Peter\" .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/GriffinFamilyMember> .\n_:Nb8d31b660e1f48018e10393848be3d54 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-NegativeDataPropertyAssertion-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DNegativeDataPropertyAssertion-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a negative data property assertion to create a trivial inconsistency based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "<http://example.org/Meg> <http://example.org/hasAge> \"5\"^^<http://www.w3.org/2001/XMLSchema#integer> .\n<http://example.org/hasAge> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n_:Ne8805c7b08574fd7a98c4f5dd805f586 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NegativePropertyAssertion> .\n_:Ne8805c7b08574fd7a98c4f5dd805f586 <http://www.w3.org/2002/07/owl#targetValue> \"5\"^^<http://www.w3.org/2001/XMLSchema#integer> .\n_:Ne8805c7b08574fd7a98c4f5dd805f586 <http://www.w3.org/2002/07/owl#assertionProperty> <http://example.org/hasAge> .\n_:N9716fb44481847318748f7a37f387fd4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Ne8805c7b08574fd7a98c4f5dd805f586 <http://www.w3.org/2002/07/owl#sourceIndividual> <http://example.org/Meg> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-NegativeObjectPropertyAssertion-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DNegativeObjectPropertyAssertion-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates use of a negative object property assertion to create a trivial inconsistency based on an example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "_:N0d4b022ec2164aa784f7f6124385d98f <http://www.w3.org/2002/07/owl#sourceIndividual> <http://example.org/Peter> .\n<http://example.org/hasSon> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N0d4b022ec2164aa784f7f6124385d98f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NegativePropertyAssertion> .\n_:N0d4b022ec2164aa784f7f6124385d98f <http://www.w3.org/2002/07/owl#assertionProperty> <http://example.org/hasSon> .\n<http://example.org/Peter> <http://example.org/hasSon> <http://example.org/Meg> .\n_:N0d4b022ec2164aa784f7f6124385d98f <http://www.w3.org/2002/07/owl#targetIndividual> <http://example.org/Meg> .\n_:N816318ec18224780b3d39282c4d7c891 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-ObjectPropertyChain-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DObjectPropertyChain-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates an object property chain in a subproperty axiom based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "_:N79d0a263f7d94993b0c7762598ed6b8c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/hasAunt> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:Nd2407131670c441991d20f338e30cd8c .\n<http://example.org/hasAunt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/hasSister> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/hasMother> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/Lois> <http://example.org/hasSister> <http://example.org/Carol> .\n<http://example.org/Stewie> <http://example.org/hasMother> <http://example.org/Lois> .\n_:Nd2407131670c441991d20f338e30cd8c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasMother> .\n_:Nd2407131670c441991d20f338e30cd8c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N2fa708fa73664b179b4bef4f916b4976 .\n_:N2fa708fa73664b179b4bef4f916b4976 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N2fa708fa73664b179b4bef4f916b4976 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/hasSister> .\n\n",
+    "conclusionNTriples": "<http://example.org/Stewie> <http://example.org/hasAunt> <http://example.org/Carol> .\n_:Ne75e3e5d9e0a49a39dd2261ad9e5877e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-ObjectPropertyChain-BJP-003",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DObjectPropertyChain-2DBJP-2D003",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A simple test of role chains and role hierarchy.",
+    "premiseNTriples": "<http://example.org/p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N480654058c8749f7b291257ba347b038 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/p> .\n_:N43695171c3754dc9ae321626a5583d70 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/q> .\n<http://example.org/b> <http://example.org/q> <http://example.org/c> .\n_:N863bfd5473bc4e64a86594bb86276e13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/a> <http://example.org/p> <http://example.org/b> .\n_:N480654058c8749f7b291257ba347b038 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N43695171c3754dc9ae321626a5583d70 .\n_:N43695171c3754dc9ae321626a5583d70 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://example.org/q> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/p> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:N480654058c8749f7b291257ba347b038 .\n\n",
+    "conclusionNTriples": "<http://example.org/a> <http://example.org/p> <http://example.org/c> .\n_:Nb937751b6c004494af6edcb776283ed4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-ObjectPropertyChain-BJP-004",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DObjectPropertyChain-2DBJP-2D004",
+    "types": [
+      "ConsistencyTest",
+      "NegativeEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A test of an interaction between a role chain +hierarchy and transitivity axioms.",
+    "premiseNTriples": "<http://example.org/a> <http://example.org/q> <http://example.org/b> .\n<http://example.org/p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N6b955f3c22484ed490200a26f9b6871c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://example.org/p> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:N0573529427b549488f67002099857d87 .\n_:N0e17b1dc599d41daaff81f729bb92dc6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/b> <http://example.org/q> <http://example.org/c> .\n_:N6b955f3c22484ed490200a26f9b6871c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/q> .\n<http://example.org/q> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N0573529427b549488f67002099857d87 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/p> .\n_:N0573529427b549488f67002099857d87 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N6b955f3c22484ed490200a26f9b6871c .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": "<http://example.org/p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .\n_:N104559cd36b441ae8ddb59efb5e0bc0d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n"
+  },
+  {
+    "id": "New-Feature-ObjectQCR-002",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DObjectQCR-2D002",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Demonstrates a qualified maximum cardinality object property restriction adapted from example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "_:N6611a7ca768a4e52a4d1da6ac85973cc <http://www.w3.org/2002/07/owl#onProperty> <http://example.org/fatherOf> .\n_:N0eaf17cf49514bc8bd5cf452583fd401 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Meg> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Woman> .\n_:N6611a7ca768a4e52a4d1da6ac85973cc <http://www.w3.org/2002/07/owl#maxQualifiedCardinality> \"1\"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:N6611a7ca768a4e52a4d1da6ac85973cc .\n<http://example.org/fatherOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://example.org/Woman> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Peter> <http://example.org/fatherOf> <http://example.org/Stewie> .\n<http://example.org/Peter> <http://example.org/fatherOf> <http://example.org/Meg> .\n<http://example.org/Stewie> <http://www.w3.org/2002/07/owl#differentFrom> <http://example.org/Meg> .\n_:N6611a7ca768a4e52a4d1da6ac85973cc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .\n_:N6611a7ca768a4e52a4d1da6ac85973cc <http://www.w3.org/2002/07/owl#onClass> <http://example.org/Woman> .\n\n",
+    "conclusionNTriples": "<http://example.org/Stewie> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:N4a251d92f9454e8789516d63fb80b72d .\n_:N4a251d92f9454e8789516d63fb80b72d <http://www.w3.org/2002/07/owl#complementOf> <http://example.org/Woman> .\n_:N9ba4aa6af5d646a590e38bc9f4a73641 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N4a251d92f9454e8789516d63fb80b72d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://example.org/Woman> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "New-Feature-ReflexiveProperty-001",
+    "iri": "http://owl.semanticweb.org/id/New-2DFeature-2DReflexiveProperty-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Uses a reflexive object property axiom to infer a property value based on the example in the Structural Specification and Functional-Style Syntax document.",
+    "premiseNTriples": "_:Nd7d709d7153d4f56ba2d328d18bbc914 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/knows> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ReflexiveProperty> .\n<http://example.org/Peter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://example.org/knows> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "conclusionNTriples": "_:N9842400de4f043b397e3663761128944 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/Peter> <http://example.org/knows> <http://example.org/Peter> .\n<http://example.org/knows> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "Plus and Minus Zero are Distinct",
+    "iri": "http://owl.semanticweb.org/id/Plus-2Dminus-2D0-2Dplus-2Ddisjointness",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "For floats and double, +0.0 and -0.0 are distinct values, which contradicts the functionality for numberOfChildren.",
+    "premiseNTriples": "",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-AnnotationProperty-003",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DAnnotationProperty-2D003",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "URI references used in annotations don't need to be typed.",
+    "premiseNTriples": "_:N8bf34dcf2d1448b484ed9bd696fe921c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/AnnotationProperty/consistent003#ap> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n<http://www.w3.org/2002/03owlt/AnnotationProperty/consistent003#A> <http://www.w3.org/2002/03owlt/AnnotationProperty/consistent003#ap> <http://www.w3.org/2002/03owlt/AnnotationProperty/consistent003#B> .\n<http://www.w3.org/2002/03owlt/AnnotationProperty/consistent003#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-AnnotationProperty-004",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DAnnotationProperty-2D004",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "AnnotationProperty's in OWL Lite and OWL DL, may not have range constraints.  They are permitted in OWL 2 DL.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/AnnotationProperty/consistent004#ap> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .\n<http://www.w3.org/2002/03owlt/AnnotationProperty/consistent004#ap> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n_:Na02f0cb51bb84dff9d6f64e3d8146f6e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I4.6-004",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI4.6-2D004",
+    "types": [
+      "ConsistencyTest",
+      "NegativeEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "<code>owl:sameAs</code> is stronger than <code>owl:equivalentClass</code>.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ne9262b35738c425ca7f50c70c4d7c20f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C1> <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C2> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": "<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C1> <http://www.w3.org/2002/07/owl#sameAs> <http://www.w3.org/2002/03owlt/I4.6/nonconclusions004#C2> .\n_:Nfd5d97e72cf848718307adfc3e87c744 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n"
+  },
+  {
+    "id": "WebOnt-I4.6-005-Direct",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI4.6-2D005-2DDirect",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT"
+    ],
+    "description": "Under the direct semantics, test WebOnt-I4.6-005 must be treated as a positive entailment test because the direct semantics ignore annotations in the conclusion ontology.",
+    "premiseNTriples": "_:Nec094deaa55140de815f509298ff9d1a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C1> <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C2> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C1> <http://www.w3.org/2000/01/rdf-schema#comment> \"An example class.\" .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I4.6/nonconclusions005#C2> <http://www.w3.org/2000/01/rdf-schema#comment> \"An example class.\" .\n_:N3dcbb0a1a3164a70ade4910b8b628459 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.26-001",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.26-2D001",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Structure sharing was not permitted in OWL DL, between a class description\nand a type triple, but is permitted in OWL 2 DL.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.26/consistent001#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nb1e832a6373547b78fb1fe9fb67de376 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Ne09dd9c3587949779c83ac8db4ca998b .\n_:Nc5a976bdd6c5415bbda55dba09e82593 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:Nbccd3ab98b6d4dc68b4c35d29deea50a .\n_:N67d27baf88b042adb73627d7a3f0745c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Ne09dd9c3587949779c83ac8db4ca998b <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Ne09dd9c3587949779c83ac8db4ca998b <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:Nbccd3ab98b6d4dc68b4c35d29deea50a .\n_:Nbccd3ab98b6d4dc68b4c35d29deea50a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N7f96585132e94044821ed592bb285237 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nb1e832a6373547b78fb1fe9fb67de376 .\n_:Nb1e832a6373547b78fb1fe9fb67de376 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/I5.26/consistent001#C> .\n_:Nee07a684fbe548c9ad3c3f4eed94d588 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/I5.26/consistent001#B> .\n<http://www.w3.org/2002/03owlt/I5.26/consistent001#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nee07a684fbe548c9ad3c3f4eed94d588 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N7f96585132e94044821ed592bb285237 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nbccd3ab98b6d4dc68b4c35d29deea50a <http://www.w3.org/2002/07/owl#intersectionOf> _:Nee07a684fbe548c9ad3c3f4eed94d588 .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.26-002",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.26-2D002",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Structure sharing was not permitted in OWL DL, between an\nowl:equivalentClass triple\nand a type triple, but is permitted in OWL 2 DL.",
+    "premiseNTriples": "_:Nb9ced57b82084efd8281e419dcdc03a1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N167901656c0447ad8ea9aca42093982b <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nb9ced57b82084efd8281e419dcdc03a1 <http://www.w3.org/2002/07/owl#intersectionOf> _:N167901656c0447ad8ea9aca42093982b .\n_:Nb9ced57b82084efd8281e419dcdc03a1 <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/I5.26/consistent002#A> .\n<http://www.w3.org/2002/03owlt/I5.26/consistent002#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ncd8f437dd0304162868a4aef7a896539 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:Nb9ced57b82084efd8281e419dcdc03a1 .\n_:N167901656c0447ad8ea9aca42093982b <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/I5.26/consistent002#B> .\n<http://www.w3.org/2002/03owlt/I5.26/consistent002#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N04f518e175a44076bba8b6a1741087e0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.26-005",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.26-2D005",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Structure sharing was not permitted in OWL DL, between an owl:equivalentClass triple and an\nowl:disjointWith triple, but is permitted in OWL 2 DL.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.26/consistent005#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I5.26/consistent005#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/I5.26/consistent005#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nc5b48df9938f459594ad80d68cad976c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nc5b48df9938f459594ad80d68cad976c <http://www.w3.org/2002/07/owl#intersectionOf> _:N2e2307da8fa448438a84a38ab20f0f1f .\n_:Nc5b48df9938f459594ad80d68cad976c <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/I5.26/consistent005#C> .\n_:N57e5f041b6184349a7d92ae11139b978 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N2e2307da8fa448438a84a38ab20f0f1f <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nc5b48df9938f459594ad80d68cad976c <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/I5.26/consistent005#D> .\n_:N2e2307da8fa448438a84a38ab20f0f1f <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/I5.26/consistent005#B> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.26-010",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.26-2D010",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The abstract syntax form of the conclusions is:\n\n EquivalentClasses( restriction( first:p, minCardinality(1) ) )\n ObjectProperty( first:p )\n\nThis is trivially true given that first:p is an \n<code>individualvaluedPropertyID</code>.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.26/premises010#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N1f13d72c6b7c4f668f077bf04452fd38 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "_:Ne43759089ca14e6fbc447027ae214c60 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.26/premises010#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N5c8ef6eb869c4fa7a9a8bab0b26404b5 <http://www.w3.org/2002/07/owl#onProperty> <http://www.w3.org/2002/03owlt/I5.26/premises010#p> .\n_:N5c8ef6eb869c4fa7a9a8bab0b26404b5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .\n_:N5c8ef6eb869c4fa7a9a8bab0b26404b5 <http://www.w3.org/2002/07/owl#minCardinality> \"1\"^^<http://www.w3.org/2001/XMLSchema#int> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.5-005",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.5-2D005",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "This test exhibits the effect of the comprehension principles in OWL Full.  The conclusion ontology only contains a class declaration, ObjectUnionOf class expression does not appear in an axiom.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.5/premises005#a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "_:Nd19fa5844d2944b5a0bf9a3d44684005 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nd19fa5844d2944b5a0bf9a3d44684005 <http://www.w3.org/2002/07/owl#unionOf> _:N3d3f94c9bfc348a6990de9484b1952f9 .\n_:N3d3f94c9bfc348a6990de9484b1952f9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N3d3f94c9bfc348a6990de9484b1952f9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .\n<http://www.w3.org/2002/03owlt/I5.5/premises005#a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N3d3f94c9bfc348a6990de9484b1952f9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/I5.5/premises005#a> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.8-006",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.8-2D006",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "All <code>xsd:byte</code>\nare <code>xsd:short</code>.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.8/premises006#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#byte> .\n_:N0593463d7b574137891879b5b65e5ed3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises006#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n\n",
+    "conclusionNTriples": "_:N21dafa9108c24f1a9076d84616b3f123 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises006#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://www.w3.org/2002/03owlt/I5.8/premises006#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#short> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.8-007",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.8-2D007",
+    "types": [
+      "ConsistencyTest",
+      "NegativeEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "-1 is an <code>xsd:short</code>\nthat is not an\n <code>xsd:unsignedByte</code>.",
+    "premiseNTriples": "_:Nbcac878f32b849099e1729e3cbcb1582 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises007#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://www.w3.org/2002/03owlt/I5.8/premises007#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#short> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": "_:N858cea7c1abe4eb1bc691612ef93160d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises007#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://www.w3.org/2002/03owlt/I5.8/premises007#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#unsignedByte> .\n\n"
+  },
+  {
+    "id": "WebOnt-I5.8-008",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.8-2D008",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "-1 is an <code>xsd:short</code> that is not an\n<code>xsd:unsignedShort</code>;\n100000 is an <code>xsd:unsignedInt</code> that is not\nan <code>xsd:unsignedShort</code>; but there are no\n<code>xsd:unsignedShort</code> which are neither\n<code>xsd:short</code> nor\n<code>xsd:unsignedInt</code>",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.8/premises008#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://www.w3.org/2002/03owlt/I5.8/premises008#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#short> .\n<http://www.w3.org/2002/03owlt/I5.8/premises008#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#unsignedInt> .\n_:N91b5295ce1b441ed86a99cd64c2d84e9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/I5.8/premises008#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n<http://www.w3.org/2002/03owlt/I5.8/premises008#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#unsignedShort> .\n_:Nce42524237c041f6a61d963316984723 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.8-009",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.8-2D009",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "0 is the only <code>xsd:nonNegativeInteger</code> which is\nalso an <code>xsd:nonPositiveInteger</code>. 0 is an\n<code>xsd:short</code>.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/I5.8/premises009#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#nonPositiveInteger> .\n_:N9c86e869e150429ba7485b8cc16be421 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises009#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .\n<http://www.w3.org/2002/03owlt/I5.8/premises009#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n\n",
+    "conclusionNTriples": "_:Nf2d4561dd7d748f2b0c8edee2ea63dc1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/I5.8/premises009#p> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#short> .\n<http://www.w3.org/2002/03owlt/I5.8/premises009#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-I5.8-011",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DI5.8-2D011",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The empty graph entails that <code>xsd:integer</code> and <code>xsd:string</code>\nare a <code>rdfs:Datatype</code>",
+    "premiseNTriples": "_:N618beea49dea4edbbb71768aa1352c1d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2001/XMLSchema#integer> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .\n<http://www.w3.org/2001/XMLSchema#string> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .\n_:Na7cfdd15669746b5a630e4aae2935064 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-Nothing-001",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DNothing-2D001",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The triple asserts something of type <code>owl:Nothing</code>, however\nthat is the empty class.",
+    "premiseNTriples": "_:Nfc3dd054156347e898b6ed3b7d19ed28 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N6c85e07e3999430fbc8e469ae367bb36 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Nothing> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-backwardCompatibleWith-002",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DbackwardCompatibleWith-2D002",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "In OWL Lite and DL the subject and object of a triple with predicate <code>owl:backwardCompatibleWith</code> must both be explicitly typed as <code>owl:Ontology</code>.  In OWL 2, this RDF graph parses to a single ontology with URI http://www.example.org/ and an annotation assertion between a blank node and that URI.",
+    "premiseNTriples": "<http://www.example.org/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N5d83344017ac4a76806323c80530af6b <http://www.w3.org/2002/07/owl#backwardCompatibleWith> <http://www.example.org/> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-description-logic-101",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2Ddescription-2Dlogic-2D101",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "DL Test: heinsohn1.1\nTbox tests from Heinsohn et al.\n\nTests incoherency caused by disjoint concept",
+    "premiseNTriples": "<http://oiled.man.example.net/test#r> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N0c637dec1b8243c48eee912afe736c49 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://oiled.man.example.net/test#c> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d1> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nd61c4b5da83b4a689f3541129b44c64f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://oiled.man.example.net/test#Unsatisfiable> .\n_:N0c637dec1b8243c48eee912afe736c49 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N9a7f912f6c0c45eab37580beba69b238 .\n<http://www.w3.org/2002/03owlt/description-logic/inconsistent101> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Nb80be85951354deead42860457190c33 <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d1> .\n<http://oiled.man.example.net/test#d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/2002/07/owl#equivalentClass> _:N8eb29456c38f45fca86c0ad264688742 .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Nb80be85951354deead42860457190c33 .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#c> .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N9a7f912f6c0c45eab37580beba69b238 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nf96ff58a33b840ef94009e99eaf7b16f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N8eb29456c38f45fca86c0ad264688742 <http://www.w3.org/2002/07/owl#intersectionOf> _:N0c637dec1b8243c48eee912afe736c49 .\n_:N8eb29456c38f45fca86c0ad264688742 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N9a7f912f6c0c45eab37580beba69b238 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://oiled.man.example.net/test#d> .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d> .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Nf96ff58a33b840ef94009e99eaf7b16f .\n<http://oiled.man.example.net/test#d1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nb80be85951354deead42860457190c33 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nf96ff58a33b840ef94009e99eaf7b16f <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-description-logic-103",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2Ddescription-2Dlogic-2D103",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "DL Test: heinsohn1.3\nTbox tests from Heinsohn et al.\n\nTests incoherency caused by disjoint concept",
+    "premiseNTriples": "<http://oiled.man.example.net/test#r> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/description-logic/inconsistent103> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d1> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Na38b1f05c45f4f18bbd3854b536960e8 <http://www.w3.org/2002/07/owl#intersectionOf> _:Na8473f27a6c64cf5a691041054e9373c .\n_:N69a90a3dfb7b495e9462041b695f1445 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/2002/07/owl#equivalentClass> _:Na38b1f05c45f4f18bbd3854b536960e8 .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Naef22e58b511458fbf837444f64ecbc9 .\n<http://oiled.man.example.net/test#d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#c> .\n_:Na8473f27a6c64cf5a691041054e9373c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Nb36be0a76ca04812b4c4048fc7373c54 .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:N69a90a3dfb7b495e9462041b695f1445 .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d> .\n_:Na8473f27a6c64cf5a691041054e9373c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://oiled.man.example.net/test#e3> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N69a90a3dfb7b495e9462041b695f1445 <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d1> .\n_:Nb36be0a76ca04812b4c4048fc7373c54 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://oiled.man.example.net/test#f> .\n_:Naef22e58b511458fbf837444f64ecbc9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N56558cb2ee674b6989d2c9503d98ea90 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://oiled.man.example.net/test#Unsatisfiable> .\n_:Nb36be0a76ca04812b4c4048fc7373c54 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://oiled.man.example.net/test#d1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Naef22e58b511458fbf837444f64ecbc9 <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d> .\n_:Na38b1f05c45f4f18bbd3854b536960e8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-description-logic-104",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2Ddescription-2Dlogic-2D104",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "DL Test: heinsohn1.4\nTbox tests from Heinsohn et al.\n\nTests incoherency caused by disjoint concept",
+    "premiseNTriples": "<http://oiled.man.example.net/test#r> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d1> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/description-logic/inconsistent104> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Nfbdff611954f44a7a4449822d2b71f9b <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Nda9d749f30094e8999d12331f9bc2eb0 .\n<http://oiled.man.example.net/test#d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#e3> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#c> .\n_:Nda9d749f30094e8999d12331f9bc2eb0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N519e1002f75145d58f1d3cf2bf093162 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://oiled.man.example.net/test#Unsatisfiable> .\n<http://oiled.man.example.net/test#c> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Nfbdff611954f44a7a4449822d2b71f9b .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://oiled.man.example.net/test#d> .\n<http://oiled.man.example.net/test#Unsatisfiable> <http://www.w3.org/2002/07/owl#equivalentClass> <http://oiled.man.example.net/test#c1> .\n<http://oiled.man.example.net/test#d1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nda9d749f30094e8999d12331f9bc2eb0 <http://www.w3.org/2002/07/owl#complementOf> <http://oiled.man.example.net/test#d1> .\n<http://oiled.man.example.net/test#c1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nfbdff611954f44a7a4449822d2b71f9b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://oiled.man.example.net/test#f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-differentFrom-001",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdifferentFrom-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "<code>differentFrom</code> is a <code>SymmetricProperty</code>.",
+    "premiseNTriples": "_:N03bfa607b3004192a2571daa96239076 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/differentFrom/premises001#a> <http://www.w3.org/2002/07/owl#differentFrom> <http://www.w3.org/2002/03owlt/differentFrom/premises001#b> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/differentFrom/premises001#b> <http://www.w3.org/2002/07/owl#differentFrom> <http://www.w3.org/2002/03owlt/differentFrom/premises001#a> .\n_:N9d7364dead3441e9be3320fc8d113bd6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-003",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D003",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "If the owl:disjointWith edges in the graph form an undirected complete subgraph \nthen this may be within OWL DL.",
+    "premiseNTriples": "_:N7066cf8e4fb948bebdca913d6ab9f8bf <http://www.w3.org/2002/07/owl#intersectionOf> _:N2e0def1eafcf4d079ac3587d877a5e02 .\n_:N62218e64711a45b7ac92730eef019969 <http://www.w3.org/2002/07/owl#disjointWith> _:N7066cf8e4fb948bebdca913d6ab9f8bf .\n_:N62218e64711a45b7ac92730eef019969 <http://www.w3.org/2002/07/owl#disjointWith> _:Nc7059d1991f242d4b14b2b9280e5037b .\n_:N5c02ef6526d543a4ab5ce6129897a37b <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent003#C> .\n_:Nbcfb041d0abd43e397fd405672820610 <http://www.w3.org/2002/07/owl#disjointWith> _:Nc7059d1991f242d4b14b2b9280e5037b .\n_:Nbcfb041d0abd43e397fd405672820610 <http://www.w3.org/2002/07/owl#disjointWith> _:N7066cf8e4fb948bebdca913d6ab9f8bf .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent003#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N5c4caa3044154f3b86687b0ebe434aa4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent003#B> .\n_:N2e0def1eafcf4d079ac3587d877a5e02 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nb2a38cb2cafc456c8d63948a2151baaa <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N2e0def1eafcf4d079ac3587d877a5e02 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent003#E> .\n_:N5c4caa3044154f3b86687b0ebe434aa4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N7066cf8e4fb948bebdca913d6ab9f8bf <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nb2a38cb2cafc456c8d63948a2151baaa <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent003#A> .\n_:Nc7059d1991f242d4b14b2b9280e5037b <http://www.w3.org/2002/07/owl#disjointWith> _:N67b20574ba4748ca9b915e826294018e .\n_:N67b20574ba4748ca9b915e826294018e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nc7059d1991f242d4b14b2b9280e5037b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nbcfb041d0abd43e397fd405672820610 <http://www.w3.org/2002/07/owl#disjointWith> _:N62218e64711a45b7ac92730eef019969 .\n_:N62218e64711a45b7ac92730eef019969 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent003#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent003#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N62218e64711a45b7ac92730eef019969 <http://www.w3.org/2002/07/owl#disjointWith> _:N67b20574ba4748ca9b915e826294018e .\n_:N67b20574ba4748ca9b915e826294018e <http://www.w3.org/2002/07/owl#disjointWith> _:N7066cf8e4fb948bebdca913d6ab9f8bf .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent003#E> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nbcfb041d0abd43e397fd405672820610 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N67b20574ba4748ca9b915e826294018e <http://www.w3.org/2002/07/owl#disjointWith> _:Nbcfb041d0abd43e397fd405672820610 .\n_:Nbcfb041d0abd43e397fd405672820610 <http://www.w3.org/2002/07/owl#intersectionOf> _:N5c02ef6526d543a4ab5ce6129897a37b .\n_:N62218e64711a45b7ac92730eef019969 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nb2a38cb2cafc456c8d63948a2151baaa .\n_:N2fa2de37c3364f60aa257a5147c70f61 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N5c02ef6526d543a4ab5ce6129897a37b <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent003#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nc7059d1991f242d4b14b2b9280e5037b <http://www.w3.org/2002/07/owl#disjointWith> _:N7066cf8e4fb948bebdca913d6ab9f8bf .\n_:Nc7059d1991f242d4b14b2b9280e5037b <http://www.w3.org/2002/07/owl#disjointWith> _:Nbcfb041d0abd43e397fd405672820610 .\n_:Nc68191585f46482684458fa5f3405225 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N67b20574ba4748ca9b915e826294018e <http://www.w3.org/2002/07/owl#disjointWith> _:N62218e64711a45b7ac92730eef019969 .\n_:Nc7059d1991f242d4b14b2b9280e5037b <http://www.w3.org/2002/07/owl#intersectionOf> _:Nc68191585f46482684458fa5f3405225 .\n_:N67b20574ba4748ca9b915e826294018e <http://www.w3.org/2002/07/owl#intersectionOf> _:N5c4caa3044154f3b86687b0ebe434aa4 .\n_:Nc68191585f46482684458fa5f3405225 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent003#D> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-004",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D004",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "This example has owl:disjointWith edges in the graph which cannot be generated\nby the mapping rules for DisjointClasses. Consider the lack of owl:disjointWith edge\nbetween nodes C and D.",
+    "premiseNTriples": "_:N2489929f835d4998980519c4d40f7481 <http://www.w3.org/2002/07/owl#disjointWith> _:Ne92228d0a13544acbcec69cf999ce738 .\n_:Nb9c473f11ef64b93864febb129019a63 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent004#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N4dc21200d8434a1db054da920fef07fb <http://www.w3.org/2002/07/owl#intersectionOf> _:Nf7192d67ac6a4b57a524961270e366c1 .\n_:N4dc21200d8434a1db054da920fef07fb <http://www.w3.org/2002/07/owl#disjointWith> _:N36cacccf168a474b97562bcdfff33ba1 .\n_:Ne66321e52932401ab486ab180d00a2e4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N36cacccf168a474b97562bcdfff33ba1 <http://www.w3.org/2002/07/owl#disjointWith> _:N4dc21200d8434a1db054da920fef07fb .\n_:Nb1ef90ec1ec1482283169414156b91f4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent004#C> .\n_:N2489929f835d4998980519c4d40f7481 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent004#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N4dc21200d8434a1db054da920fef07fb <http://www.w3.org/2002/07/owl#disjointWith> _:Ne92228d0a13544acbcec69cf999ce738 .\n_:N5d9f19381b4f4f9883292254607589b3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent004#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N2489929f835d4998980519c4d40f7481 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nb1ef90ec1ec1482283169414156b91f4 .\n_:N36cacccf168a474b97562bcdfff33ba1 <http://www.w3.org/2002/07/owl#disjointWith> _:Ne92228d0a13544acbcec69cf999ce738 .\n_:Nb1ef90ec1ec1482283169414156b91f4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nb0cb5382521b4f64ab8cec8d395c3030 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent004#D> .\n_:Nb9c473f11ef64b93864febb129019a63 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent004#B> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent004#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ne92228d0a13544acbcec69cf999ce738 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nf625ac6911d24cd5ac8ab825f72eec92 .\n_:Ne66321e52932401ab486ab180d00a2e4 <http://www.w3.org/2002/07/owl#disjointWith> _:N36cacccf168a474b97562bcdfff33ba1 .\n_:Nf625ac6911d24cd5ac8ab825f72eec92 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent004#E> .\n_:N2489929f835d4998980519c4d40f7481 <http://www.w3.org/2002/07/owl#disjointWith> _:N4dc21200d8434a1db054da920fef07fb .\n_:Nf7192d67ac6a4b57a524961270e366c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nf7192d67ac6a4b57a524961270e366c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent004#A> .\n_:N4dc21200d8434a1db054da920fef07fb <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ne66321e52932401ab486ab180d00a2e4 <http://www.w3.org/2002/07/owl#disjointWith> _:Ne92228d0a13544acbcec69cf999ce738 .\n_:N4dc21200d8434a1db054da920fef07fb <http://www.w3.org/2002/07/owl#disjointWith> _:Ne66321e52932401ab486ab180d00a2e4 .\n_:Ne92228d0a13544acbcec69cf999ce738 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nf625ac6911d24cd5ac8ab825f72eec92 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent004#E> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nb0cb5382521b4f64ab8cec8d395c3030 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Ne66321e52932401ab486ab180d00a2e4 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nb0cb5382521b4f64ab8cec8d395c3030 .\n_:N36cacccf168a474b97562bcdfff33ba1 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nb9c473f11ef64b93864febb129019a63 .\n_:N36cacccf168a474b97562bcdfff33ba1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N36cacccf168a474b97562bcdfff33ba1 <http://www.w3.org/2002/07/owl#disjointWith> _:N2489929f835d4998980519c4d40f7481 .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-005",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D005",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "If the owl:disjointWith edges in the graph form unconnected\nundirected complete subgraphs\nthen this may be within OWL DL.",
+    "premiseNTriples": "_:Nc524b58043d4415db133dc332193332e <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent005#A> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent005#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N74cd2c6ac47b481f856aafd00d8852c6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N221b5af1ee7140a68c4efa9d6daf2392 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent005#D> .\n_:N74cd2c6ac47b481f856aafd00d8852c6 <http://www.w3.org/2002/07/owl#disjointWith> _:N77bd97f02b30451698d62b5ff4509c88 .\n_:N0c00e5d0984e4d86b9e55bab23d148d9 <http://www.w3.org/2002/07/owl#intersectionOf> _:N78d58d4118174833817a82e02e98a483 .\n_:N78d58d4118174833817a82e02e98a483 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N3c70d13a2fae4dc79fabf4950b5e6d11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N3f18579682194abf89255e22c5e3330c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N78d58d4118174833817a82e02e98a483 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent005#C> .\n_:N44282f4e495e44188b6618c0901638fb <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent005#B> .\n_:N77bd97f02b30451698d62b5ff4509c88 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N3c70d13a2fae4dc79fabf4950b5e6d11 <http://www.w3.org/2002/07/owl#disjointWith> _:N77bd97f02b30451698d62b5ff4509c88 .\n_:N44282f4e495e44188b6618c0901638fb <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nc524b58043d4415db133dc332193332e <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N3188586d076947988c5512e1442eb55f <http://www.w3.org/2002/07/owl#intersectionOf> _:N44282f4e495e44188b6618c0901638fb .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent005#E> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N221b5af1ee7140a68c4efa9d6daf2392 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N3c70d13a2fae4dc79fabf4950b5e6d11 <http://www.w3.org/2002/07/owl#intersectionOf> _:N221b5af1ee7140a68c4efa9d6daf2392 .\n_:N3188586d076947988c5512e1442eb55f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N74cd2c6ac47b481f856aafd00d8852c6 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nc524b58043d4415db133dc332193332e .\n_:N74cd2c6ac47b481f856aafd00d8852c6 <http://www.w3.org/2002/07/owl#disjointWith> _:N3c70d13a2fae4dc79fabf4950b5e6d11 .\n_:N77bd97f02b30451698d62b5ff4509c88 <http://www.w3.org/2002/07/owl#disjointWith> _:N3c70d13a2fae4dc79fabf4950b5e6d11 .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent005#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent005#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N77bd97f02b30451698d62b5ff4509c88 <http://www.w3.org/2002/07/owl#intersectionOf> _:N3f18579682194abf89255e22c5e3330c .\n_:Nd26ffde2f03f462e8281c40f6f6fb05c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N3188586d076947988c5512e1442eb55f <http://www.w3.org/2002/07/owl#disjointWith> _:N0c00e5d0984e4d86b9e55bab23d148d9 .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent005#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N3f18579682194abf89255e22c5e3330c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent005#E> .\n_:N0c00e5d0984e4d86b9e55bab23d148d9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-006",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D006",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "If the owl:disjointWith edges in the graph form\nundirected complete subgraphs which share blank nodes\nthen this was not within OWL DL, but is permissible in OWL 2 DL.",
+    "premiseNTriples": "_:N414a5948386645c2a00388f22587de75 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nfa83200c93d64ff4aca4e7ff3729f328 .\n_:Nfa83200c93d64ff4aca4e7ff3729f328 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Ne068ebfa93d641528ce2c79d1d579efc <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent006#E> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent006#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N0a6e7bd515bc476a91678c098513b76b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N0a6e7bd515bc476a91678c098513b76b <http://www.w3.org/2002/07/owl#disjointWith> _:N113d5621bbb84492abe1f0a532f92ae4 .\n_:N065e099fc6d44d84b2ea7ac5c21a3f6e <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent006#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent006#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nd3bec94339e644d481d6cb35a146bb85 <http://www.w3.org/2002/07/owl#disjointWith> _:N113d5621bbb84492abe1f0a532f92ae4 .\n_:Ne5077a0177dd4dcaa5b4491eeda78f13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N5a8f042f509d42faac9683a45eb3d8c8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent006#B> .\n_:N4e04541ff3a34d4dbee923e3775cc4d8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent006#A> .\n_:N414a5948386645c2a00388f22587de75 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nfa83200c93d64ff4aca4e7ff3729f328 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent006#C> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent006#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent006#E> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N113d5621bbb84492abe1f0a532f92ae4 <http://www.w3.org/2002/07/owl#disjointWith> _:Nd3bec94339e644d481d6cb35a146bb85 .\n_:N4e04541ff3a34d4dbee923e3775cc4d8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Ne068ebfa93d641528ce2c79d1d579efc <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nd3bec94339e644d481d6cb35a146bb85 <http://www.w3.org/2002/07/owl#intersectionOf> _:Ne068ebfa93d641528ce2c79d1d579efc .\n_:N5a8f042f509d42faac9683a45eb3d8c8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N05479fae338d431bbc06f039862ee8f9 <http://www.w3.org/2002/07/owl#intersectionOf> _:N5a8f042f509d42faac9683a45eb3d8c8 .\n_:N0a6e7bd515bc476a91678c098513b76b <http://www.w3.org/2002/07/owl#intersectionOf> _:N4e04541ff3a34d4dbee923e3775cc4d8 .\n_:N05479fae338d431bbc06f039862ee8f9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N065e099fc6d44d84b2ea7ac5c21a3f6e <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent006#D> .\n_:N0a6e7bd515bc476a91678c098513b76b <http://www.w3.org/2002/07/owl#disjointWith> _:Nd3bec94339e644d481d6cb35a146bb85 .\n_:N113d5621bbb84492abe1f0a532f92ae4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N05479fae338d431bbc06f039862ee8f9 <http://www.w3.org/2002/07/owl#disjointWith> _:N0a6e7bd515bc476a91678c098513b76b .\n_:N414a5948386645c2a00388f22587de75 <http://www.w3.org/2002/07/owl#disjointWith> _:N0a6e7bd515bc476a91678c098513b76b .\n_:N113d5621bbb84492abe1f0a532f92ae4 <http://www.w3.org/2002/07/owl#intersectionOf> _:N065e099fc6d44d84b2ea7ac5c21a3f6e .\n_:N05479fae338d431bbc06f039862ee8f9 <http://www.w3.org/2002/07/owl#disjointWith> _:N414a5948386645c2a00388f22587de75 .\n_:Nd3bec94339e644d481d6cb35a146bb85 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-007",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D007",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "If the owl:disjointWith edges in the graph form\nundirected complete subgraphs which share URIref nodes\nbut do not share blank node\nthen this may be within OWL DL.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/disjointWith/consistent007#A> <http://www.w3.org/2002/07/owl#disjointWith> _:N4316f9e1a509488c9ef0197f7d16cd3f .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N4316f9e1a509488c9ef0197f7d16cd3f <http://www.w3.org/2002/07/owl#intersectionOf> _:N5da9ca8c2251475b86db8ccea5880689 .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#E> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N5da9ca8c2251475b86db8ccea5880689 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#D> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#A> <http://www.w3.org/2002/07/owl#disjointWith> _:Nac72d8e0a9324e08a29a3c919ddfd690 .\n_:Na96cfca7b7b840638fcba9b3115a36fa <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N72d6b863680a4ada9bc469a432788755 <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#A> .\n_:N92a176fc1dfd4618a881dab2f3e4d29a <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#C> .\n_:N92a50de2b450405d975b58a4a189d3f9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N72d6b863680a4ada9bc469a432788755 <http://www.w3.org/2002/07/owl#disjointWith> _:N30d47b828ec949c4865bfb886e0968a7 .\n_:Na96cfca7b7b840638fcba9b3115a36fa <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#E> .\n_:N72d6b863680a4ada9bc469a432788755 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N30d47b828ec949c4865bfb886e0968a7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N30d47b828ec949c4865bfb886e0968a7 <http://www.w3.org/2002/07/owl#intersectionOf> _:N92a176fc1dfd4618a881dab2f3e4d29a .\n_:N4316f9e1a509488c9ef0197f7d16cd3f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N72d6b863680a4ada9bc469a432788755 <http://www.w3.org/2002/07/owl#intersectionOf> _:N85b2ab6d43de431184a3aa2706a7f9cc .\n_:Nac72d8e0a9324e08a29a3c919ddfd690 <http://www.w3.org/2002/07/owl#disjointWith> _:N4316f9e1a509488c9ef0197f7d16cd3f .\n_:N85b2ab6d43de431184a3aa2706a7f9cc <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#B> .\n_:N30d47b828ec949c4865bfb886e0968a7 <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent007#A> .\n_:N85b2ab6d43de431184a3aa2706a7f9cc <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N5da9ca8c2251475b86db8ccea5880689 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:N4316f9e1a509488c9ef0197f7d16cd3f <http://www.w3.org/2002/07/owl#disjointWith> _:Nac72d8e0a9324e08a29a3c919ddfd690 .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent007#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nac72d8e0a9324e08a29a3c919ddfd690 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nac72d8e0a9324e08a29a3c919ddfd690 <http://www.w3.org/2002/07/owl#intersectionOf> _:Na96cfca7b7b840638fcba9b3115a36fa .\n_:N92a176fc1dfd4618a881dab2f3e4d29a <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-008",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D008",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A further example that cannot be generated from the mapping rule\nfor DisjointClasses.",
+    "premiseNTriples": "_:Nfa5cead402c849369d87821574e90126 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nad62e218153e489dbb807d74ba50b6c2 <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent008#A> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nfa5cead402c849369d87821574e90126 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent008#C> .\n_:N2051518a7e5649b0964fb8d301d73679 <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent008#A> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nad62e218153e489dbb807d74ba50b6c2 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nfa5cead402c849369d87821574e90126 .\n_:N2051518a7e5649b0964fb8d301d73679 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#D> <http://www.w3.org/2002/07/owl#disjointWith> _:N2051518a7e5649b0964fb8d301d73679 .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent008#D> <http://www.w3.org/2002/07/owl#disjointWith> _:Nad62e218153e489dbb807d74ba50b6c2 .\n_:N2051518a7e5649b0964fb8d301d73679 <http://www.w3.org/2002/07/owl#intersectionOf> _:N9ed5b4d104b749b29dc62054a3631efd .\n_:N9ed5b4d104b749b29dc62054a3631efd <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Nad62e218153e489dbb807d74ba50b6c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N17a2d599670043ac98e0d7d12344582c <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N9ed5b4d104b749b29dc62054a3631efd <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent008#B> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-disjointWith-009",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DdisjointWith-2D009",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "If the owl:disjointWith edges in the graph form\nundirected complete subgraphs which share URIref nodes\nbut do not share blank node\nthen this may be within OWL DL.",
+    "premiseNTriples": "_:N003ae7d79dec4a8798fc1225cb29dafd <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N003ae7d79dec4a8798fc1225cb29dafd <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent009#A> .\n_:N003ae7d79dec4a8798fc1225cb29dafd <http://www.w3.org/2002/07/owl#intersectionOf> _:Nbc70d8077a1f4ce28f8d81566b561a8e .\n_:N0eee2de4e5834ad7acdcbaf3b94f1645 <http://www.w3.org/2002/07/owl#intersectionOf> _:Nca94f64529d3495c97614b90984eb852 .\n_:Nca94f64529d3495c97614b90984eb852 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#A> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#D> <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent009#A> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#D> <http://www.w3.org/2002/07/owl#disjointWith> _:N003ae7d79dec4a8798fc1225cb29dafd .\n_:Nca94f64529d3495c97614b90984eb852 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent009#C> .\n_:Nbc70d8077a1f4ce28f8d81566b561a8e <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#B> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ncb2040cd76644c01a23eba0fc99509c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#D> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N0eee2de4e5834ad7acdcbaf3b94f1645 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N0eee2de4e5834ad7acdcbaf3b94f1645 <http://www.w3.org/2002/07/owl#disjointWith> <http://www.w3.org/2002/03owlt/disjointWith/consistent009#A> .\n<http://www.w3.org/2002/03owlt/disjointWith/consistent009#D> <http://www.w3.org/2002/07/owl#disjointWith> _:N0eee2de4e5834ad7acdcbaf3b94f1645 .\n_:Nbc70d8077a1f4ce28f8d81566b561a8e <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2002/03owlt/disjointWith/consistent009#B> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-equivalentClass-002",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DequivalentClass-2D002",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Two classes may be different names for the same set of individuals",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Car> <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/equivalentClass/premises002#Automobile> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Car> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Automobile> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N9707ad3996ea4f34bc72a9e3098bbdf5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Car> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Automobile> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/03owlt/equivalentClass/premises002#Car> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Car> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/03owlt/equivalentClass/premises002#Automobile> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises002#Automobile> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nbea2c38411f34541817f7c3ee08dd646 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-equivalentClass-003",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DequivalentClass-2D003",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Two classes may be different names for the same set of individuals",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Car> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Automobile> .\n<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Car> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Automobile> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:N1abeff7222df44c49de80f9b3a14c7d2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Automobile> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Car> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Automobile> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Car> <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Automobile> .\n<http://www.w3.org/2002/03owlt/equivalentClass/conclusions003#Car> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nf6425ff01f904b1fb8c5e6fbe8169ca6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-equivalentClass-008-Direct",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DequivalentClass-2D008-2DDirect",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT"
+    ],
+    "description": "A version of WebOnt-equivalentClass-008 modified for the Direct Semantics, under which annotations in the entailed ontology are ignored.",
+    "premiseNTriples": "_:Na4870694d70e406ea57e5110cf7bc2cc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#annotate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c1> <http://www.w3.org/2002/07/owl#equivalentClass> <http://www.w3.org/2002/03owlt/equivalentClass/premises008#c2> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c1> <http://www.w3.org/2002/03owlt/equivalentClass/premises008#annotate> \"description of c1\" .\n\n",
+    "conclusionNTriples": "_:N680f778553db4b789e968b8f558cbf03 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#annotate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n<http://www.w3.org/2002/03owlt/equivalentClass/premises008#c2> <http://www.w3.org/2002/03owlt/equivalentClass/premises008#annotate> \"description of c1\" .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-equivalentProperty-002",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DequivalentProperty-2D002",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A reasoner can also deduce that <code>hasLeader</code> is a <code>subProperty</code> of <code>hasHead</code> and <code>hasHead</code> is a <code>subProperty</code> of <code>hasLeader</code>.",
+    "premiseNTriples": "_:N29e4602fae8a4dc5bda5028db25f6ad8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasHead> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasHead> <http://www.w3.org/2002/07/owl#equivalentProperty> <http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasLeader> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasLeader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasLeader> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasHead> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasLeader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasHead> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasLeader> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/premises002#hasHead> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:N216037ce9cf24ee28c80ad257f64390d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-equivalentProperty-003",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DequivalentProperty-2D003",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The inverse entailment of test 002 also holds.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasLeader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasLeader> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasHead> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasHead> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:Nc57769b6d0dd46769820fac2d4479b56 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasHead> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasLeader> .\n\n",
+    "conclusionNTriples": "<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasHead> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasLeader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasHead> <http://www.w3.org/2002/07/owl#equivalentProperty> <http://www.w3.org/2002/03owlt/equivalentProperty/conclusions003#hasLeader> .\n_:N82e40b75e3d64d228250878088d2567e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-imports-011",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2Dimports-2D011",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A Lite version of test <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#imports-001\">imports-001</a>.",
+    "premiseNTriples": "<http://www.w3.org/2002/03owlt/imports/premises011> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/data#Socrates> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/03owlt/imports/support011-A#Man> .\n<http://www.w3.org/2002/03owlt/imports/premises011> <http://www.w3.org/2002/07/owl#imports> <http://www.w3.org/2002/03owlt/imports/support011-A> .\n\n",
+    "conclusionNTriples": "_:N9c47bf2d07de4f47b8434a195572a92f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/data#Socrates> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/03owlt/imports/support011-A#Mortal> .\n<http://www.w3.org/2002/03owlt/imports/support011-A#Mortal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-miscellaneous-303",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2Dmiscellaneous-2D303",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "<code>dc:creator</code> may be declared as an annotation property.",
+    "premiseNTriples": "<http://purl.org/dc/elements/1.0/creator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n_:N4551134f84284b2db769c35a935a9b02 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "WebOnt-sameAs-001",
+    "iri": "http://owl.semanticweb.org/id/TestCase-3AWebOnt-2DsameAs-2D001",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Annotation properties refer to a class instance. sameAs, in OWL Full, also refers to the class instance.",
+    "premiseNTriples": "_:N6fc337a7a47d46b9b6661ae76002efee <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#annotate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c1> <http://www.w3.org/2002/07/owl#sameAs> <http://www.w3.org/2002/03owlt/sameAs/premises001#c2> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c1> <http://www.w3.org/2002/03owlt/sameAs/premises001#annotate> \"description of c1\" .\n\n",
+    "conclusionNTriples": "_:N16c36714d73940fc929b99c9f0f96c2a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#c2> <http://www.w3.org/2002/03owlt/sameAs/premises001#annotate> \"description of c1\" .\n<http://www.w3.org/2002/03owlt/sameAs/premises001#annotate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#AnnotationProperty> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "chain2trans1",
+    "iri": "http://owl.semanticweb.org/id/Chain2trans",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A role chain can be a synonym for transitivity.",
+    "premiseNTriples": "_:Ncdb99b5efe7540648ee83e2ef6b9826c <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:N77f0fd0016544baab51e1767dcd3a070 .\n_:N77f0fd0016544baab51e1767dcd3a070 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/ontology#p> .\n<http://example.org/ontology#p> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:Ncdb99b5efe7540648ee83e2ef6b9826c .\n<http://example.org/ontology> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N77f0fd0016544baab51e1767dcd3a070 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n_:Ncdb99b5efe7540648ee83e2ef6b9826c <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/ontology#p> .\n<http://example.org/ontology#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n\n",
+    "conclusionNTriples": "<http://example.org/ontology> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://example.org/ontology#p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "functionality-clash",
+    "iri": "http://owl.semanticweb.org/id/Functionality-2Dclash",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The property hasAge is functional, but the individual a has two distinct hasAge fillers.",
+    "premiseNTriples": "",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "owl2-rl-anonymous-individual",
+    "iri": "http://owl.semanticweb.org/id/Owl2-2Drl-2Danonymous-2Dindividual",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "OWL 2 RL allows anonymous individual.",
+    "premiseNTriples": "_:Nd5e017b78db04ec091c78f958b5aa415 <http://owl2.test/rules#op> <http://owl2.test/rules#I> .\n<http://owl2.test/rules#op> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:Nd5e017b78db04ec091c78f958b5aa415 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules#I> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n_:N83a675b596e74be69f033a02822fc9bc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "owl2-rl-rules-fp-differentFrom",
+    "iri": "http://owl.semanticweb.org/id/Owl2-2Drl-2Drules-2Dfp-2DdifferentFrom",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "This test checks the interaction between an OWL functional property and differentFrom assertions.",
+    "premiseNTriples": "<http://owl2.test/rules/X1> <http://www.w3.org/2002/07/owl#differentFrom> <http://owl2.test/rules/X2> .\n<http://owl2.test/rules/X2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/Y1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/fp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://owl2.test/rules/X1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/fp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#FunctionalProperty> .\n<http://owl2.test/rules/Y2> <http://owl2.test/rules/fp> <http://owl2.test/rules/X2> .\n<http://owl2.test/rules/Y1> <http://owl2.test/rules/fp> <http://owl2.test/rules/X1> .\n_:N1410ead709214af2a688f4c237bae24d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://owl2.test/rules/Y2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n\n",
+    "conclusionNTriples": "<http://owl2.test/rules/Y1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n_:N1604c89105d44abca45deadee16782c9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://owl2.test/rules/Y1> <http://www.w3.org/2002/07/owl#differentFrom> <http://owl2.test/rules/Y2> .\n<http://owl2.test/rules/Y2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "owl2-rl-rules-ifp-differentFrom",
+    "iri": "http://owl.semanticweb.org/id/Owl2-2Drl-2Drules-2Difp-2DdifferentFrom",
+    "types": [
+      "ConsistencyTest",
+      "PositiveEntailmentTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "This test checks the interaction between inverse functional property and differentFrom assertions.",
+    "premiseNTriples": "<http://owl2.test/rules/ifp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n<http://owl2.test/rules/X2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/Y1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n_:Nccb95e3df16545bea28697aeed1c2557 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n<http://owl2.test/rules/X1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/ifp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#InverseFunctionalProperty> .\n<http://owl2.test/rules/Y1> <http://owl2.test/rules/ifp> <http://owl2.test/rules/X1> .\n<http://owl2.test/rules/Y1> <http://www.w3.org/2002/07/owl#differentFrom> <http://owl2.test/rules/Y2> .\n<http://owl2.test/rules/Y2> <http://owl2.test/rules/ifp> <http://owl2.test/rules/X2> .\n<http://owl2.test/rules/Y2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n\n",
+    "conclusionNTriples": "<http://owl2.test/rules/X2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/X1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules/X1> <http://www.w3.org/2002/07/owl#differentFrom> <http://owl2.test/rules/X2> .\n_:N7ce4b1a41bf9451da78e99b31c75f7c6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n\n",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "owl2-rl-valid-oneof",
+    "iri": "http://owl.semanticweb.org/id/Owl2-2Drl-2Dvalid-2Doneof",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "A valid usage of oneOf in OWL 2 RL",
+    "premiseNTriples": "_:N622e9b57512b4c3baf40dcc6651f2c35 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:N9a7a03ed702a438bb07589ef7052dfb9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://owl2.test/rules#X> .\n<http://owl2.test/rules#X> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n_:Nba33567eda5646499061873b193ecacf <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .\n<http://owl2.test/rules#Y> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .\n<http://owl2.test/rules#Cb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Nc1ac506fc5a44d7babb57b79daef6108 <http://www.w3.org/2002/07/owl#oneOf> _:N9a7a03ed702a438bb07589ef7052dfb9 .\n_:Nba33567eda5646499061873b193ecacf <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://owl2.test/rules#Y> .\n_:Nc1ac506fc5a44d7babb57b79daef6108 <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://owl2.test/rules#Cb> .\n_:N9a7a03ed702a438bb07589ef7052dfb9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:Nba33567eda5646499061873b193ecacf .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "owl2-rl-valid-rightside-allvaluesfrom",
+    "iri": "http://owl.semanticweb.org/id/Owl2-2Drl-2Dvalid-2Drightside-2Dallvaluesfrom",
+    "types": [
+      "ConsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "Valid RL usage of allValuesFrom.",
+    "premiseNTriples": "<http://owl2.test/rules#C> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:Ncb20faa63e754a2b844b71de212b4051 .\n<http://owl2.test/rules#C> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n_:Ncb20faa63e754a2b844b71de212b4051 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://owl2.test/rules#C1> .\n<http://owl2.test/rules#op> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .\n_:Ncb20faa63e754a2b844b71de212b4051 <http://www.w3.org/2002/07/owl#onProperty> <http://owl2.test/rules#op> .\n_:N65df00da9ac14c4ab685626b8aa927b7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .\n_:Ncb20faa63e754a2b844b71de212b4051 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .\n<http://owl2.test/rules#C1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .\n\n",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  },
+  {
+    "id": "string-integer-clash",
+    "iri": "http://owl.semanticweb.org/id/String-2Dinteger-2Dclash",
+    "types": [
+      "InconsistencyTest"
+    ],
+    "semantics": [
+      "DIRECT",
+      "RDF-BASED"
+    ],
+    "description": "The range of hasAge is integer, but a has an asserted string hasAge filler.",
+    "premiseNTriples": "",
+    "conclusionNTriples": "",
+    "nonConclusionNTriples": ""
+  }
+]
