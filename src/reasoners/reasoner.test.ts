@@ -250,7 +250,7 @@ describe('ReasonerBase provenance and reports', () => {
         const reasoner = new HooklessReasoner();
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
 
-        const inferred = [...reasoner.expand(dataset, sourceGraph, {
+        const inferred = [...reasoner.infer(dataset, sourceGraph, {
             stopWhen: result => result.predicate.value === derivedPredicate.value,
         })];
 
@@ -262,7 +262,7 @@ describe('ReasonerBase provenance and reports', () => {
         const reasoner = new IndexOnlyReasoner();
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
 
-        const inferred = [...reasoner.expand(dataset, sourceGraph, {
+        const inferred = [...reasoner.infer(dataset, sourceGraph, {
             stopWhen: result => result.predicate.value === joinedPredicate.value,
         })];
 

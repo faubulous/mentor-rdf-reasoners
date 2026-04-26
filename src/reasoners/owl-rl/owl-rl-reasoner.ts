@@ -128,7 +128,7 @@ const OWL_RL_VIOLATION_RULES: ReadonlySet<string> = new Set([
  * const reasoner = new OwlRlReasoner();
  * const store = RdfStore.createDefault().asDataset();
  * // load your ontology into store / sourceGraph ...
- * for (const quad of reasoner.expand(store, sourceGraph)) {
+ * for (const quad of reasoner.infer(store, sourceGraph)) {
  *     store.add(DataFactory.quad(quad.subject, quad.predicate, quad.object, targetGraph));
  * }
  * ```

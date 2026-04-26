@@ -1,7 +1,8 @@
 # Mentor RDF Reasoners
 
 [![License: LGPL-2.1](https://img.shields.io/badge/License-LGPL--2.1-blue.svg)](https://opensource.org/licenses/LGPL-2.1)
-[![Coverage](https://img.shields.io/endpoint?url=https://faubulous.github.io/mentor-rdf-reasoners/coverage-badge.json)](https://faubulous.github.io/mentor-rdf-reasoners/)
+[![Coverage](https://img.shields.io/endpoint?url=https://faubulous.github.io/mentor-rdf-reasoners/coverage-badge.json)](https://faubulous.github.io/mentor-rdf-reasoners/coverage/)
+[![OWL 2 RL](https://img.shields.io/badge/OWL%202-RL-brightgreen.svg)](https://www.w3.org/TR/owl2-profiles/)
 [![npm downloads](https://img.shields.io/npm/dm/@faubulous/mentor-rdf-reasoners.svg)](https://www.npmjs.com/package/@faubulous/mentor-rdf-reasoners)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue.svg)](https://www.typescriptlang.org/)
 
@@ -25,7 +26,7 @@ npm install @faubulous/mentor-rdf-reasoners
 
 ### Basic inference
 
-Load your ontology into an `RdfStore`, then call `expand()` to derive all entailed triples and add them to a target graph.
+Load your ontology into an `RdfStore`, then call `infer()` to derive all entailed triples and add them to a target graph.
 
 ```ts
 import { OwlRlReasoner } from '@faubulous/mentor-rdf-reasoners';
@@ -42,7 +43,7 @@ const store = RdfStore.createDefault().asDataset();
 
 const reasoner = new OwlRlReasoner();
 
-for (const q of reasoner.expand(store, sourceGraph)) {
+for (const q of reasoner.infer(store, sourceGraph)) {
     store.add(quad(q.subject, q.predicate, q.object, inferredGraph));
 }
 ```
@@ -57,7 +58,7 @@ owl:Thing rdfs:subClassOf owl:Nothing
 
 For editor workflows, prefer the two-phase API:
 
-1. `expand(..., { stopWhen: ... })` finds the first inferred quad matching a predicate and stops inference early.
+1. `infer(..., { stopWhen: ... })` finds the first inferred quad matching a predicate and stops inference early.
 2. `provenanceFor(...)` explains only that one derived quad.
 
 ```ts
@@ -81,14 +82,14 @@ const stopWhen = q =>
   q.predicate.value === `${RDFS}subClassOf` &&
   q.object.value === `${OWL}Nothing`;
 
-const inconsistency = [...reasoner.expand(store, sourceGraph, { stopWhen })].find(stopWhen);
+const inconsistency = [...reasoner.infer(store, sourceGraph, { stopWhen })].find(stopWhen);
 
 if (inconsistency) {
     console.error('Ontology is inconsistent.');
 }
 ```
 
-If you need the full closure instead, `expand()` still yields all inferred triples.
+If you need the full closure instead, `infer()` still yields all inferred triples.
 
 ### Explaining inconsistencies
 
@@ -131,7 +132,7 @@ const stopWhen = q =>
   q.predicate.value === `${RDFS}subClassOf` &&
   q.object.value === `${OWL}Nothing`;
 
-const inconsistency = [...reasoner.expand(store, sourceGraph, { stopWhen })].find(stopWhen);
+const inconsistency = [...reasoner.infer(store, sourceGraph, { stopWhen })].find(stopWhen);
 
 if (inconsistency) {
     const explanation = reasoner.provenanceFor(store, sourceGraph, inconsistency);

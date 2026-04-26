@@ -165,7 +165,7 @@ describe('OwlRlReasoner provenance', () => {
             q.predicate.value === RDFS_SUBCLASS_OF &&
             q.object.value === OWL_NOTHING;
 
-        const inferredUntilStop = [...reasoner.expand(store, sourceGraph, { stopWhen })];
+        const inferredUntilStop = [...reasoner.infer(store, sourceGraph, { stopWhen })];
         const inconsistency = inferredUntilStop.find(stopWhen);
 
         expect(inconsistency).toBeDefined();
@@ -194,7 +194,7 @@ describe('OwlRlReasoner provenance', () => {
         const store = makeStore(typeTriple, v1Triple, v2Triple);
         const reasoner = new OwlRlReasoner();
 
-        const inconsistency = [...reasoner.expand(store, sourceGraph)].find(q =>
+        const inconsistency = [...reasoner.infer(store, sourceGraph)].find(q =>
             q.subject.value === OWL_THING &&
             q.predicate.value === RDFS_SUBCLASS_OF &&
             q.object.value === OWL_NOTHING,

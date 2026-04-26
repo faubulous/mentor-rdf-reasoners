@@ -27,14 +27,14 @@ describe('OwlRlReasoner', () => {
     it('expand() should return an iterable', () => {
         const store = makeStore();
         const reasoner = new OwlRlReasoner();
-        const result = reasoner.expand(store, sourceGraph);
+        const result = reasoner.infer(store, sourceGraph);
         expect(typeof result[Symbol.iterator]).toBe('function');
     });
 
     it('expand() should yield axiomatic triples for an empty graph', () => {
         const store = makeStore();
         const reasoner = new OwlRlReasoner();
-        const inferred = [...reasoner.expand(store, sourceGraph)];
+        const inferred = [...reasoner.infer(store, sourceGraph)];
         // Axioms (prp-ap annotation properties, cls-thing/nothing, dt-type1 datatypes) are always yielded.
         expect(inferred.length).toBeGreaterThan(0);
     });
@@ -45,7 +45,7 @@ describe('OwlRlReasoner', () => {
         const p = namedNode('https://example.org/prop');
         const store = makeStore(quad(a, p, b, sourceGraph));
         const reasoner = new OwlRlReasoner();
-        const inferred = [...reasoner.expand(store, sourceGraph)];
+        const inferred = [...reasoner.infer(store, sourceGraph)];
         // Source triple (a p b) must not appear in the inferred set.
         const sourceInInferred = inferred.some(q =>
             q.subject.value === a.value &&
@@ -65,7 +65,7 @@ describe('ReasonerBase default axioms', () => {
         const reasoner = new MinimalReasoner();
         const store = RdfStore.createDefault().asDataset();
         const g = namedNode('urn:g');
-        const result = [...reasoner.expand(store, g)];
+        const result = [...reasoner.infer(store, g)];
         expect(result.length).toBe(0);
     });
 });

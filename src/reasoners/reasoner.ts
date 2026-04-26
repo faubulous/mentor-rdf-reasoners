@@ -17,12 +17,10 @@ export interface Reasoner {
      *
      * @param store The source dataset to reason over.
      * @param sourceGraph The named graph (or default graph) to read triples from.
+     * @param options Optional controls for inference workflows (e.g. early stopping).
+     * @returns An iterable of inferred quads (with graph term normalized to defaultGraph).
      */
-    expand(
-        store: rdfjs.DatasetCore,
-        sourceGraph: rdfjs.Quad_Graph,
-        options?: ExpandOptions,
-    ): Iterable<rdfjs.Quad>;
+    infer(store: rdfjs.DatasetCore, sourceGraph: rdfjs.Quad_Graph, options?: InferenceOptions): Iterable<rdfjs.Quad>;
 }
 
 /**
@@ -68,8 +66,8 @@ export type ProvenanceRecord = SourceRecord | AxiomRecord | InferredRecord;
 /** Predicate used to match inferred quads of interest (e.g. inconsistency markers). */
 export type InferredQuadMatcher = (quad: rdfjs.Quad) => boolean;
 
-/** Optional controls for expansion workflows. */
-export interface ExpandOptions {
+/** Optional controls for inference workflows. */
+export interface InferenceOptions {
     stopWhen?: InferredQuadMatcher;
 }
 
@@ -128,7 +126,7 @@ export function infer(quad: rdfjs.Quad, rule: string, ...antecedents: rdfjs.Quad
  */
 export abstract class ReasonerBase implements Reasoner {
 
-    *expand(store: rdfjs.DatasetCore, sourceGraph: rdfjs.Quad_Graph, options?: ExpandOptions,): Iterable<rdfjs.Quad> {
+    *infer(store: rdfjs.DatasetCore, sourceGraph: rdfjs.Quad_Graph, options?: InferenceOptions,): Iterable<rdfjs.Quad> {
         let shouldStop = false;
         const stopWhen = options?.stopWhen;
 
