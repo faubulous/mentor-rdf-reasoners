@@ -1,5 +1,9 @@
 import * as rdfjs from '@rdfjs/types';
-import { InferenceResult, InferredRecord, ReasonerBase, ReportSeverity, TripleIndex } from '../reasoner.js';
+import type { InferenceResult } from '../inference-result.js';
+import type { InferredTripleRecord } from '../provenance-record.js';
+import { ReasonerBase } from '../reasoner-base.js';
+import type { ReportSeverity } from '../reasoning-report.js';
+import { TripleIndex } from '../triple-index.js';
 import { equalitySingleQuad, equalityJoin } from './rules/equality.js';
 import { classAxiomSingleQuad, classAxiomJoin } from './rules/class-axioms.js';
 import { propertySingleQuad, propertyJoin, propertyAxioms } from './rules/property-semantics.js';
@@ -127,8 +131,8 @@ const OWL_RL_VIOLATION_RULES: ReadonlySet<string> = new Set([
  * ```ts
  * const reasoner = new OwlRlReasoner();
  * const store = RdfStore.createDefault().asDataset();
- * // load your ontology into store / sourceGraph ...
- * for (const quad of reasoner.infer(store, sourceGraph)) {
+ * // load your ontology into store / sourceGraphs ...
+ * for (const quad of reasoner.infer(store, sourceGraphs)) {
  *     store.add(DataFactory.quad(quad.subject, quad.predicate, quad.object, targetGraph));
  * }
  * ```
@@ -165,7 +169,7 @@ export class OwlRlReasoner extends ReasonerBase {
         return OWL_RL_RULE_DESCRIPTIONS[rule];
     }
 
-    protected getSeverity(record: InferredRecord): ReportSeverity {
+    protected getRecordSeverity(record: InferredTripleRecord): ReportSeverity {
         return OWL_RL_VIOLATION_RULES.has(record.rule) ? 'Violation' : 'Info';
     }
 }

@@ -1,17 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
-import { ReasonerBase, TripleIndex, infer } from './reasoner.js';
+import { infer } from './inference-result.js';
+import { ReasonerBase } from './reasoner-base.js';
+import { TripleIndex } from './triple-index.js';
 
 const namedNode = DataFactory.namedNode.bind(DataFactory);
 const createQuad = DataFactory.quad.bind(DataFactory);
 const literal = DataFactory.literal.bind(DataFactory);
 
 const sourceGraph = namedNode('urn:source');
+const sourceGraphTwo = namedNode('urn:source-two');
 const s = namedNode('urn:s');
 const p = namedNode('urn:p');
 const o = namedNode('urn:o');
 const derivedPredicate = namedNode('urn:derived');
+const schemaPredicate = namedNode('urn:schema');
 const hiddenAntecedent = createQuad(namedNode('urn:hidden-s'), namedNode('urn:hidden-p'), namedNode('urn:hidden-o'));
 
 function makeDataset(...quads: rdfjs.Quad[]): rdfjs.DatasetCore {
@@ -93,16 +97,26 @@ class DuplicateAxiomReasoner extends ReasonerBase {
     protected *inferFromIndex(_index: TripleIndex) { }
 }
 
+class CrossGraphReasoner extends ReasonerBase {
+    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: TripleIndex) { }
+
+    protected *inferFromIndex(index: TripleIndex) {
+        if (index.has(schemaPredicate.value, s.value, p.value) && index.has(p.value, s.value, o.value)) {
+            yield infer(createQuad(s, namedNode('urn:cross-graph-derived'), o), 'cross-graph-rule');
+        }
+    }
+}
+
 describe('ReasonerBase provenance and reports', () => {
     it('falls back to source premises when an antecedent is not in the provenance map', () => {
         const reasoner = new HooklessReasoner();
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
         const target = createQuad(s, derivedPredicate, o);
 
-        const record = reasoner.provenanceFor(dataset, sourceGraph, target);
+        const record = reasoner.getProvenanceForQuad(dataset, [sourceGraph], target);
 
-        expect(record?.origin).toBe('inferred');
-        const inferred = record as Extract<typeof record, { origin: 'inferred' }>;
+        expect(record?.origin).toBe('inference');
+        const inferred = record as Extract<typeof record, { origin: 'inference' }>;
         expect(inferred.rule).toBe('custom-rule');
         expect(inferred.ruleDescription).toBeUndefined();
         expect(inferred.premises).toHaveLength(1);
@@ -115,13 +129,14 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
         const target = createQuad(s, derivedPredicate, o);
 
-        const reportResult = reasoner.reportFor(dataset, sourceGraph, target);
+        const reportResult = reasoner.getReportForQuad(dataset, [sourceGraph], target);
 
         expect(reportResult).toBeDefined();
         expect(reportResult?.severity).toBe('Info');
-        expect(reportResult?.sourceGraph.value).toBe(sourceGraph.value);
+        expect(reportResult?.sourceGraphs).toHaveLength(1);
+        expect(reportResult?.sourceGraphs[0].value).toBe(sourceGraph.value);
         expect(reportResult?.targetGraph.value).toBe(sourceGraph.value);
-        expect(reportResult?.detail.origin).toBe('inferred');
+        expect(reportResult?.detail.origin).toBe('inference');
     });
 
     it('builds a source-level report result for a source triple target', () => {
@@ -129,7 +144,7 @@ describe('ReasonerBase provenance and reports', () => {
         const sourceQuad = createQuad(s, p, literal('value'), sourceGraph);
         const dataset = makeDataset(sourceQuad);
 
-        const reportResult = reasoner.reportFor(dataset, sourceGraph, sourceQuad);
+        const reportResult = reasoner.getReportForQuad(dataset, [sourceGraph], sourceQuad);
 
         expect(reportResult).toBeDefined();
         expect(reportResult?.severity).toBe('Info');
@@ -163,14 +178,14 @@ describe('ReasonerBase provenance and reports', () => {
 
         const reasoner = new HooklessReasoner();
         const dataset = makeDataset(sourceQuad);
-        const record = reasoner.provenanceFor(dataset, sourceGraph, sourceQuad);
+        const record = reasoner.getProvenanceForQuad(dataset, [sourceGraph], sourceQuad);
 
         expect(record?.origin).toBe('source');
         expect(record?.triple.object.termType).toBe('Literal');
         expect(record?.triple.object.value).toBe('raw');
     });
 
-    it('provenanceForAll covers fallback premises and omitted ruleDescription branches', () => {
+    it('getProvenanceForInferredQuads covers fallback premises and omitted ruleDescription branches', () => {
         const rawLiteral = {
             termType: 'Literal',
             value: 'raw-all',
@@ -196,12 +211,12 @@ describe('ReasonerBase provenance and reports', () => {
 
         const reasoner = new HooklessReasoner();
         const dataset = makeDataset(sourceQuad);
-        const records = reasoner.provenanceForAll(dataset, sourceGraph);
+        const records = reasoner.getProvenanceForInferredQuads(dataset, [sourceGraph]);
 
         expect(records).toHaveLength(1);
-        expect(records[0].origin).toBe('inferred');
-        expect((records[0] as Extract<typeof records[0], { origin: 'inferred' }>).ruleDescription).toBeUndefined();
-        expect((records[0] as Extract<typeof records[0], { origin: 'inferred' }>).premises[0].origin).toBe('source');
+        expect(records[0].origin).toBe('inference');
+        expect((records[0] as Extract<typeof records[0], { origin: 'inference' }>).ruleDescription).toBeUndefined();
+        expect((records[0] as Extract<typeof records[0], { origin: 'inference' }>).premises[0].origin).toBe('source');
     });
 
     it('covers join-based provenance paths when no ruleDescription is available', () => {
@@ -209,14 +224,14 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
         const target = createQuad(s, namedNode('urn:joined'), o);
 
-        const single = reasoner.provenanceFor(dataset, sourceGraph, target);
-        const all = reasoner.provenanceForAll(dataset, sourceGraph);
+        const single = reasoner.getProvenanceForQuad(dataset, [sourceGraph], target);
+        const all = reasoner.getProvenanceForInferredQuads(dataset, [sourceGraph]);
 
-        expect(single?.origin).toBe('inferred');
-        expect((single as Extract<typeof single, { origin: 'inferred' }>).ruleDescription).toBeUndefined();
+        expect(single?.origin).toBe('inference');
+        expect((single as Extract<typeof single, { origin: 'inference' }>).ruleDescription).toBeUndefined();
         expect(all).toHaveLength(1);
-        expect(all[0].origin).toBe('inferred');
-        expect((all[0] as Extract<typeof all[0], { origin: 'inferred' }>).ruleDescription).toBeUndefined();
+        expect(all[0].origin).toBe('inference');
+        expect((all[0] as Extract<typeof all[0], { origin: 'inference' }>).ruleDescription).toBeUndefined();
     });
 
     it('returns an axiom record when the target quad is a seeded axiom', () => {
@@ -224,7 +239,7 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset();
         const target = createQuad(namedNode('urn:axiom-s'), namedNode('urn:axiom-p'), namedNode('urn:axiom-o'));
 
-        const record = reasoner.provenanceFor(dataset, sourceGraph, target);
+        const record = reasoner.getProvenanceForQuad(dataset, [sourceGraph], target);
 
         expect(record?.origin).toBe('axiom');
         expect(record?.triple.subject.value).toBe('urn:axiom-s');
@@ -235,7 +250,7 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
         const missingTarget = createQuad(namedNode('urn:missing-s'), namedNode('urn:missing-p'), namedNode('urn:missing-o'));
 
-        expect(reasoner.reportFor(dataset, sourceGraph, missingTarget)).toBeUndefined();
+        expect(reasoner.getReportForQuad(dataset, [sourceGraph], missingTarget)).toBeUndefined();
     });
 
     it('provenanceFor continues past a join result when it is not the requested target', () => {
@@ -243,14 +258,14 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
         const missingTarget = createQuad(namedNode('urn:other-s'), namedNode('urn:other-p'), namedNode('urn:other-o'));
 
-        expect(reasoner.provenanceFor(dataset, sourceGraph, missingTarget)).toBeUndefined();
+        expect(reasoner.getProvenanceForQuad(dataset, [sourceGraph], missingTarget)).toBeUndefined();
     });
 
     it('expand stops early when stopWhen matches a single-quad inference', () => {
         const reasoner = new HooklessReasoner();
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
 
-        const inferred = [...reasoner.infer(dataset, sourceGraph, {
+        const inferred = [...reasoner.infer(dataset, [sourceGraph], {
             stopWhen: result => result.predicate.value === derivedPredicate.value,
         })];
 
@@ -262,7 +277,7 @@ describe('ReasonerBase provenance and reports', () => {
         const reasoner = new IndexOnlyReasoner();
         const dataset = makeDataset(createQuad(s, p, o, sourceGraph));
 
-        const inferred = [...reasoner.infer(dataset, sourceGraph, {
+        const inferred = [...reasoner.infer(dataset, [sourceGraph], {
             stopWhen: result => result.predicate.value === joinedPredicate.value,
         })];
 
@@ -274,10 +289,10 @@ describe('ReasonerBase provenance and reports', () => {
         const reasoner = new DuplicateAxiomReasoner();
         const dataset = makeDataset(duplicateSource, duplicateSource);
 
-        const all = reasoner.provenanceForAll(dataset, sourceGraph);
-        const sourceRecord = reasoner.provenanceFor(dataset, sourceGraph, duplicateSource);
+        const all = reasoner.getProvenanceForInferredQuads(dataset, [sourceGraph]);
+        const sourceRecord = reasoner.getProvenanceForQuad(dataset, [sourceGraph], duplicateSource);
         const axiomTarget = createQuad(namedNode('urn:dup-axiom-s'), namedNode('urn:dup-axiom-p'), namedNode('urn:dup-axiom-o'));
-        const axiomRecord = reasoner.provenanceFor(dataset, sourceGraph, axiomTarget);
+        const axiomRecord = reasoner.getProvenanceForQuad(dataset, [sourceGraph], axiomTarget);
 
         expect(all).toHaveLength(0);
         expect(sourceRecord?.origin).toBe('source');
@@ -289,6 +304,30 @@ describe('ReasonerBase provenance and reports', () => {
         const dataset = makeDataset();
         const missingTarget = createQuad(namedNode('urn:none-s'), namedNode('urn:none-p'), namedNode('urn:none-o'));
 
-        expect(reasoner.provenanceFor(dataset, sourceGraph, missingTarget)).toBeUndefined();
+        expect(reasoner.getProvenanceForQuad(dataset, [sourceGraph], missingTarget)).toBeUndefined();
+    });
+
+    it('supports merged inference across multiple source graphs', () => {
+        const reasoner = new CrossGraphReasoner();
+        const schemaQuad = createQuad(s, schemaPredicate, p, sourceGraph);
+        const dataQuad = createQuad(s, p, o, sourceGraphTwo);
+        const dataset = makeDataset(schemaQuad, dataQuad);
+
+        const inferred = [...reasoner.infer(dataset, [sourceGraph, sourceGraphTwo])];
+
+        expect(inferred.some(q => q.predicate.value === 'urn:cross-graph-derived')).toBe(true);
+    });
+
+    it('deduplicates identical source triples across multiple source graphs', () => {
+        const reasoner = new HooklessReasoner();
+        const dataset = makeDataset(
+            createQuad(s, p, o, sourceGraph),
+            createQuad(s, p, o, sourceGraphTwo),
+        );
+
+        const inferred = [...reasoner.infer(dataset, [sourceGraph, sourceGraphTwo])];
+
+        expect(inferred).toHaveLength(1);
+        expect(inferred[0].predicate.value).toBe(derivedPredicate.value);
     });
 });

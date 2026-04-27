@@ -108,7 +108,7 @@ function buildCombined(premiseNTriples: string, graphIri: string): CombinedGraph
     const g      = namedNode(graphIri);
     const premise  = parseNTriples(premiseNTriples);
     const axioms   = [...reasoner.getAxioms()];
-    const inferred = [...reasoner.infer(store as any, g)];
+    const inferred = [...reasoner.infer(store as any, [g])];
 
     const keys       = new Set<string>();
     const poToSubjects = new Map<string, string[]>();

@@ -52,7 +52,7 @@ function makeStore(...quads: rdfjs.Quad[]) {
 }
 
 function infer(...quads: rdfjs.Quad[]) {
-    return [...reasoner.infer(makeStore(...quads), g)];
+    return [...reasoner.infer(makeStore(...quads), [g])];
 }
 
 function hasTriple(quads: rdfjs.Quad[], s: string, pv: string, o: string) {

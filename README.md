@@ -35,15 +35,18 @@ import DataFactory from '@rdfjs/data-model';
 
 const { namedNode, quad } = DataFactory;
 
-const sourceGraph = namedNode('https://example.org/my-ontology');
+const sourceGraphs = [
+  namedNode('https://example.org/my-ontology'),
+  namedNode('https://example.org/my-dataset'),
+];
 const inferredGraph = namedNode('https://example.org/my-ontology/inferred');
 
 const store = RdfStore.createDefault().asDataset();
-// ... load your ontology into store / sourceGraph ...
+// ... load your ontology + dataset into store / sourceGraphs ...
 
 const reasoner = new OwlRlReasoner();
 
-for (const q of reasoner.infer(store, sourceGraph)) {
+for (const q of reasoner.infer(store, sourceGraphs)) {
     store.add(quad(q.subject, q.predicate, q.object, inferredGraph));
 }
 ```
@@ -74,7 +77,7 @@ const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
 const store = RdfStore.createDefault().asDataset();
 // ... load your ontology into store ...
 
-const sourceGraph = defaultGraph();
+const sourceGraphs = [defaultGraph()];
 const reasoner = new OwlRlReasoner();
 
 const stopWhen = q =>
@@ -82,7 +85,7 @@ const stopWhen = q =>
   q.predicate.value === `${RDFS}subClassOf` &&
   q.object.value === `${OWL}Nothing`;
 
-const inconsistency = [...reasoner.infer(store, sourceGraph, { stopWhen })].find(stopWhen);
+const inconsistency = [...reasoner.infer(store, sourceGraphs, { stopWhen })].find(stopWhen);
 
 if (inconsistency) {
     console.error('Ontology is inconsistent.');
@@ -95,17 +98,17 @@ If you need the full closure instead, `infer()` still yields all inferred triple
 
 The reasoner now tracks derivation provenance as structured explanation trees.
 
-- `provenanceFor(store, sourceGraph, targetQuad)` returns the explanation for one derived quad.
-- `provenanceForAll(store, sourceGraph)` returns explanation records for all inferred quads.
-- `expandWithProvenance(store, sourceGraph)` is retained as a backward-compatible alias for `provenanceForAll(...)`.
-- `reportFor(store, sourceGraph, targetQuad, { targetGraph? })` returns a SHACL-inspired result entry.
-- `reportForAll(store, sourceGraph, { targetGraph? })` returns a SHACL-inspired report wrapper with `consistent` and `results`.
+- `provenanceFor(store, sourceGraphs, targetQuad)` returns the explanation for one derived quad.
+- `getProvenanceForInferredQuads(store, sourceGraphs)` returns explanation records for all inferred quads.
+- `getProvenanceForInferredQuads(store, sourceGraphs)` is retained as a backward-compatible alias for `getProvenanceForInferredQuads(...)`.
+- `reportFor(store, sourceGraphs, targetQuad, { targetGraph? })` returns a SHACL-inspired result entry.
+- `reportForAll(store, sourceGraphs, { targetGraph? })` returns a SHACL-inspired report wrapper with `consistent` and `results`.
 
 Each explanation record is a discriminated union:
 
 - `SourceRecord`  — `{ origin: 'source', triple }` — leaf: the triple came directly from the input dataset
 - `AxiomRecord`   — `{ origin: 'axiom', triple }` — leaf: the triple is a profile axiom
-- `InferredRecord` — `{ origin: 'inferred', triple, rule, ruleDescription?, premises[] }` — branch: derived by a named OWL RL rule from its `premises`
+- `InferredRecord` — `{ origin: 'inference', triple, rule, ruleDescription?, premises[] }` — branch: derived by a named OWL RL rule from its `premises`
 
 `rule` stays a stable machine-oriented id (for example `dt-diff`), while `ruleDescription` is a compact human-readable label (when known by the reasoner profile).
 
@@ -124,7 +127,7 @@ const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
 const store = RdfStore.createDefault().asDataset();
 // ... load your ontology into store ...
 
-const sourceGraph = defaultGraph();
+const sourceGraphs = [defaultGraph()];
 const reasoner = new OwlRlReasoner();
 
 const stopWhen = q =>
@@ -132,10 +135,10 @@ const stopWhen = q =>
   q.predicate.value === `${RDFS}subClassOf` &&
   q.object.value === `${OWL}Nothing`;
 
-const inconsistency = [...reasoner.infer(store, sourceGraph, { stopWhen })].find(stopWhen);
+const inconsistency = [...reasoner.infer(store, sourceGraphs, { stopWhen })].find(stopWhen);
 
 if (inconsistency) {
-    const explanation = reasoner.provenanceFor(store, sourceGraph, inconsistency);
+    const explanation = reasoner.provenanceFor(store, sourceGraphs, inconsistency);
 
     console.dir(explanation, { depth: null });
 }
@@ -145,7 +148,7 @@ Typical result shape:
 
 ```ts
 {
-  origin: 'inferred',
+  origin: 'inference',
   triple: owl:Thing rdfs:subClassOf owl:Nothing,
   rule: 'dt-diff',
   ruleDescription: 'Different literal values for a functional data property.',
@@ -163,13 +166,13 @@ This gives direct explainability down to the source triples that triggered the i
 
 For tools that want a validator-style output, the reasoner also exposes a SHACL-inspired format:
 
-- `sourceGraph`: graph read by the reasoner
+- `sourceGraphs`: graphs read by the reasoner
 - `targetGraph`: graph where inferred triples are intended to be written
 - `severity`: `Violation | Warning | Info`
 - `detail`: full provenance record (includes triple terms, rule id, and message)
 
 ```ts
-const report = reasoner.reportForAll(store, sourceGraph, {
+const report = reasoner.reportForAll(store, sourceGraphs, {
   targetGraph: namedNode('https://example.org/my-ontology/inferred')
 });
 
@@ -181,11 +184,11 @@ Typical result shape:
 
 ```ts
 {
-  sourceGraph: 'https://example.org/my-ontology',
+  sourceGraphs: ['https://example.org/my-ontology', 'https://example.org/my-dataset'],
   targetGraph: 'https://example.org/my-ontology/inferred',
   severity: 'Violation',
   detail: {
-    origin: 'inferred',
+    origin: 'inference',
     triple: owl:Thing rdfs:subClassOf owl:Nothing,
     rule: 'dt-diff',
     ruleDescription: 'Different literal values for a functional data property.',

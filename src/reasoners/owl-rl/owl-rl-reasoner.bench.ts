@@ -11,7 +11,7 @@ describe('OwlRlReasoner benchmarks', () => {
         const store = RdfStore.createDefault().asDataset();
         const reasoner = new OwlRlReasoner();
 
-        for (const _ of reasoner.infer(store, sourceGraph)) { /* consume */ }
+        for (const _ of reasoner.infer(store, [sourceGraph])) { /* consume */ }
     });
 });
 

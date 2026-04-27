@@ -14,7 +14,7 @@
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
 import { TripleIndex } from '../../triple-index.js';
-import { InferenceResult, infer } from '../../reasoner.js';
+import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, OWL, RDFS, owl, rdfs } from '../vocabulary.js';
 
 const { namedNode } = DataFactory;

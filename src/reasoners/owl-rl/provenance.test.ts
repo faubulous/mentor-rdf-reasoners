@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import * as rdfjs from '@rdfjs/types';
-import type { ProvenanceRecord, InferredRecord } from '../reasoner.js';
+import type { InferredTripleRecord, ProvenanceRecord } from '../provenance-record.js';
 import { OwlRlReasoner } from './index.js';
 
 const { namedNode, quad, literal } = DataFactory;
@@ -36,7 +36,7 @@ function findRecord(records: ProvenanceRecord[], s: string, p: string, o: string
 }
 
 function collectRules(record: ProvenanceRecord): string[] {
-    if (record.origin === 'inferred') {
+    if (record.origin === 'inference') {
         return [record.rule, ...record.premises.flatMap(collectRules)];
     }
 
@@ -51,7 +51,7 @@ function collectSourceQuadKeys(record: ProvenanceRecord): Set<string> {
             keys.add(quadKey(node.triple as ReturnType<typeof quad>));
         }
 
-        if (node.origin === 'inferred') {
+        if (node.origin === 'inference') {
             for (const premise of node.premises) visit(premise);
         }
     };
@@ -67,12 +67,12 @@ describe('OwlRlReasoner provenance', () => {
 
         const store = makeStore(quad(a, namedNode(OWL_SAME_AS), b, sourceGraph));
         const reasoner = new OwlRlReasoner();
-        const records = reasoner.expandWithProvenance(store, sourceGraph);
+        const records = reasoner.getProvenanceForInferredQuads(store, [sourceGraph]);
 
         const record = findRecord(records, b.value, OWL_SAME_AS, a.value);
         expect(record).toBeDefined();
-        expect(record?.origin).toBe('inferred');
-        const inferred = record as InferredRecord;
+        expect(record?.origin).toBe('inference');
+        const inferred = record as InferredTripleRecord;
         expect(inferred.rule).toBe('eq-sym');
         expect(inferred.ruleDescription).toContain('symmetry');
         expect(inferred.premises.length).toBe(1);
@@ -92,15 +92,15 @@ describe('OwlRlReasoner provenance', () => {
 
         const store = makeStore(typeTriple, v1Triple, v2Triple);
         const reasoner = new OwlRlReasoner();
-        const records = reasoner.expandWithProvenance(store, sourceGraph);
+        const records = reasoner.getProvenanceForInferredQuads(store, [sourceGraph]);
 
         const record = records.find(r =>
-            r.origin === 'inferred' &&
+            r.origin === 'inference' &&
             r.rule === 'dt-diff' &&
             r.triple.subject.value === OWL_THING &&
             r.triple.predicate.value === RDFS_SUBCLASS_OF &&
             r.triple.object.value === OWL_NOTHING,
-        ) as InferredRecord | undefined;
+        ) as InferredTripleRecord | undefined;
 
         expect(record).toBeDefined();
         expect(record?.ruleDescription).toContain('functional data property');
@@ -116,7 +116,7 @@ describe('OwlRlReasoner provenance', () => {
 
         const store = makeStore(quad(a, namedNode(RDF_TYPE), namedNode(OWL_NAMED_INDIVIDUAL), sourceGraph));
         const reasoner = new OwlRlReasoner();
-        const records = reasoner.expandWithProvenance(store, sourceGraph);
+        const records = reasoner.getProvenanceForInferredQuads(store, [sourceGraph]);
 
         const record = findRecord(records, a.value, RDF_TYPE, OWL_THING);
         expect(record).toBeDefined();
@@ -137,12 +137,12 @@ describe('OwlRlReasoner provenance', () => {
         const store = makeStore(ab, bc);
 
         const reasoner = new OwlRlReasoner();
-        const records = reasoner.expandWithProvenance(store, sourceGraph);
+        const records = reasoner.getProvenanceForInferredQuads(store, [sourceGraph]);
 
         const record = findRecord(records, a.value, OWL_SAME_AS, c.value);
         expect(record).toBeDefined();
-        expect(record?.origin).toBe('inferred');
-        expect(['eq-trans', 'eq-rep-o', 'eq-rep-s']).toContain((record as InferredRecord).rule);
+        expect(record?.origin).toBe('inference');
+        expect(['eq-trans', 'eq-rep-o', 'eq-rep-s']).toContain((record as InferredTripleRecord).rule);
 
         const sourceKeys = collectSourceQuadKeys(record!);
         expect(sourceKeys.has(quadKey(ab))).toBe(true);
@@ -165,12 +165,12 @@ describe('OwlRlReasoner provenance', () => {
             q.predicate.value === RDFS_SUBCLASS_OF &&
             q.object.value === OWL_NOTHING;
 
-        const inferredUntilStop = [...reasoner.infer(store, sourceGraph, { stopWhen })];
+        const inferredUntilStop = [...reasoner.infer(store, [sourceGraph], { stopWhen })];
         const inconsistency = inferredUntilStop.find(stopWhen);
 
         expect(inconsistency).toBeDefined();
 
-        const explanation = reasoner.provenanceFor(store, sourceGraph, inconsistency!);
+        const explanation = reasoner.getProvenanceForQuad(store, [sourceGraph], inconsistency!);
         expect(explanation).toBeDefined();
         expect(explanation?.triple.subject.value).toBe(OWL_THING);
         expect(explanation?.triple.predicate.value).toBe(RDFS_SUBCLASS_OF);
@@ -194,7 +194,7 @@ describe('OwlRlReasoner provenance', () => {
         const store = makeStore(typeTriple, v1Triple, v2Triple);
         const reasoner = new OwlRlReasoner();
 
-        const inconsistency = [...reasoner.infer(store, sourceGraph)].find(q =>
+        const inconsistency = [...reasoner.infer(store, [sourceGraph])].find(q =>
             q.subject.value === OWL_THING &&
             q.predicate.value === RDFS_SUBCLASS_OF &&
             q.object.value === OWL_NOTHING,
@@ -202,14 +202,15 @@ describe('OwlRlReasoner provenance', () => {
 
         expect(inconsistency).toBeDefined();
 
-        const result = reasoner.reportFor(store, sourceGraph, inconsistency!, { targetGraph });
+        const result = reasoner.getReportForQuad(store, [sourceGraph], inconsistency!, { targetGraph });
         expect(result).toBeDefined();
-        expect(result?.sourceGraph.value).toBe(sourceGraph.value);
+        expect(result?.sourceGraphs).toHaveLength(1);
+        expect(result?.sourceGraphs[0].value).toBe(sourceGraph.value);
         expect(result?.targetGraph.value).toBe(targetGraph.value);
         expect(result?.severity).toBe('Violation');
-        expect(result?.detail.origin).toBe('inferred');
-        expect((result?.detail as InferredRecord).rule).toBe('dt-diff');
-        expect((result?.detail as InferredRecord).ruleDescription).toContain('functional data property');
+        expect(result?.detail.origin).toBe('inference');
+        expect((result?.detail as InferredTripleRecord).rule).toBe('dt-diff');
+        expect((result?.detail as InferredTripleRecord).ruleDescription).toContain('functional data property');
         expect(result?.detail.triple.subject.value).toBe(OWL_THING);
         expect(result?.detail.triple.predicate.value).toBe(RDFS_SUBCLASS_OF);
         expect(result?.detail.triple.object.value).toBe(OWL_NOTHING);
@@ -226,7 +227,7 @@ describe('OwlRlReasoner provenance', () => {
         const store = makeStore(typeTriple, v1Triple, v2Triple);
         const reasoner = new OwlRlReasoner();
 
-        const report = reasoner.reportForAll(store, sourceGraph);
+        const report = reasoner.getReportForAllQuads(store, [sourceGraph]);
         expect(report.results.length).toBeGreaterThan(0);
         expect(report.results.some(r => r.severity === 'Violation')).toBe(true);
         expect(report.consistent).toBe(false);

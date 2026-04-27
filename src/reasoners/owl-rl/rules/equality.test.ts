@@ -6,7 +6,7 @@ import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
-import { TripleIndex } from '../../reasoner.js';
+import { TripleIndex } from '../../triple-index.js';
 import { equalityJoin } from './equality.js';
 
 const { namedNode, quad, literal, blankNode } = DataFactory;
@@ -40,7 +40,7 @@ function makeStore(...quads: rdfjs.Quad[]) {
 }
 
 function infer(...quads: rdfjs.Quad[]) {
-    return [...reasoner.infer(makeStore(...quads), g)];
+    return [...reasoner.infer(makeStore(...quads), [g])];
 }
 
 function hasTriple(quads: rdfjs.Quad[], s: string, pv: string, o: string) {
