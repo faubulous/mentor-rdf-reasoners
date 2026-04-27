@@ -55,6 +55,47 @@ describe('OwlRlReasoner', () => {
         );
         expect(sourceInInferred).toBe(false);
     });
+
+    it('materializes eq-ref by default', () => {
+        const a = namedNode('https://example.org/A');
+        const b = namedNode('https://example.org/B');
+        const p = namedNode('https://example.org/prop');
+        const store = makeStore(quad(a, p, b, sourceGraph));
+        const reasoner = new OwlRlReasoner();
+        const inferred = [...reasoner.infer(store, [sourceGraph])];
+
+        const hasEqRef = inferred.some(q =>
+            q.subject.value === a.value &&
+            q.predicate.value === 'http://www.w3.org/2002/07/owl#sameAs' &&
+            q.object.value === a.value,
+        );
+
+        expect(hasEqRef).toBe(true);
+    });
+
+    it('can disable eq-ref with equalityRef: false', () => {
+        const a = namedNode('https://example.org/A');
+        const b = namedNode('https://example.org/B');
+        const p = namedNode('https://example.org/prop');
+        const store = makeStore(quad(a, p, b, sourceGraph));
+        const reasoner = new OwlRlReasoner({ equalityRef: false });
+        const inferred = [...reasoner.infer(store, [sourceGraph])];
+
+        const hasSubjectEqRef = inferred.some(q =>
+            q.subject.value === a.value &&
+            q.predicate.value === 'http://www.w3.org/2002/07/owl#sameAs' &&
+            q.object.value === a.value,
+        );
+
+        const hasObjectEqRef = inferred.some(q =>
+            q.subject.value === b.value &&
+            q.predicate.value === 'http://www.w3.org/2002/07/owl#sameAs' &&
+            q.object.value === b.value,
+        );
+
+        expect(hasSubjectEqRef).toBe(false);
+        expect(hasObjectEqRef).toBe(false);
+    });
 });
 
 describe('ReasonerBase default axioms', () => {

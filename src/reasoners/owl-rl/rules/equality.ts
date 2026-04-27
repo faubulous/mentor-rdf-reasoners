@@ -23,6 +23,14 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
     return DataFactory.quad(subject, predicate, object);
 }
 
+export interface EqualityOptions {
+    includeReflexiveSameAs?: boolean;
+}
+
+function isReflexiveResource(term: rdfjs.Term): term is rdfjs.Quad_Subject {
+    return term.termType === 'NamedNode' || term.termType === 'BlankNode';
+}
+
 /**
  * Single-quad equality rules that fire once per incoming quad.
  *
@@ -37,11 +45,21 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-equality
  */
-export function* equalitySingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
+export function* equalitySingleQuad(quad: rdfjs.Quad, index: QuadIndex, options?: EqualityOptions): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const subjectIri   = subject.value;
     const predicateIri = predicate.value;
     const objectIri    = object.value;
+
+    if (options?.includeReflexiveSameAs) {
+        // eq-ref: for each term occurring in a triple, emit x owl:sameAs x.
+        yield infer(makeTriple(subject, owl.sameAs, subject), 'eq-ref', quad);
+        yield infer(makeTriple(predicate, owl.sameAs, predicate), 'eq-ref', quad);
+
+        if (isReflexiveResource(object)) {
+            yield infer(makeTriple(object, owl.sameAs, object), 'eq-ref', quad);
+        }
+    }
 
     if (predicateIri === OWL.sameAs) {
         // eq-sym: x sameAs y → y sameAs x

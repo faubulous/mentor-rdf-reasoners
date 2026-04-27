@@ -214,11 +214,12 @@ describe('prp-fp', () => {
     });
 
     it('p type FunctionalProperty, single value → no sameAs', () => {
-        const result = infer(
-            quad(p, rdfType, owlFunctional, g),
-            quad(x, p, y, g),
-        );
-        expect(hasTriple(result, y.value, owlSameAs.value, y.value)).toBe(false);
+        // Use propertyJoin directly so that eq-ref (now on by default) doesn't interfere.
+        const index = new QuadIndex();
+        index.add(quad(p, rdfType, owlFunctional, g));
+        index.add(quad(x, p, y, g));
+        const results = [...propertyJoin(index)];
+        expect(results.some(r => r.rule === 'prp-fp')).toBe(false);
     });
 
     it('p type FunctionalProperty with reverse differentFrom evidence → different subjects become differentFrom', () => {
@@ -498,13 +499,16 @@ describe('prp-pdw non-node object guard', () => {
         const lit1 = DataFactory.literal('l1');
         const lit2 = DataFactory.literal('l2');
         const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
-        const result = infer(
-            quad(p, owlDisjProp, p2, g),
-            quad(x, p, lit1, g),
-            quad(x, p2, lit2, g),
-        );
-
-        expect(hasTriple(result, lit1.value, owlDifferentFrom.value, lit2.value)).toBe(false);
+        // Use propertyJoin directly: prp-pdw guards against emitting differentFrom for literal objects.
+        const index = new QuadIndex();
+        index.add(quad(p, owlDisjProp, p2, g));
+        index.add(quad(x, p, lit1, g));
+        index.add(quad(x, p2, lit2, g));
+        const results = [...propertyJoin(index)];
+        expect(results.some(r =>
+            r.rule === 'prp-pdw' &&
+            r.quad.predicate.value === owlDifferentFrom.value,
+        )).toBe(false);
     });
 });
 
@@ -517,18 +521,22 @@ describe('prp-adp non-node object guard', () => {
         const lit1 = DataFactory.literal('lit-a');
         const lit2 = DataFactory.literal('lit-b');
         const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
-        const result = infer(
-            quad(adp, rdfType, owlADP, g),
-            quad(adp, namedNode('http://www.w3.org/2002/07/owl#members'), l1, g),
-            quad(l1, rdfFirst, p, g),
-            quad(l1, rdfRest, l2, g),
-            quad(l2, rdfFirst, p2, g),
-            quad(l2, rdfRest, rdfNil, g),
-            quad(x, p, lit1, g),
-            quad(x, p2, lit2, g),
-        );
-
-        expect(hasTriple(result, lit1.value, owlDifferentFrom.value, lit2.value)).toBe(false);
+        // Use propertyJoin directly: prp-adp guards against emitting differentFrom for literal objects.
+        const index = new QuadIndex();
+        const owlMembers = namedNode('http://www.w3.org/2002/07/owl#members');
+        index.add(quad(adp, rdfType, owlADP, g));
+        index.add(quad(adp, owlMembers, l1, g));
+        index.add(quad(l1, rdfFirst, p, g));
+        index.add(quad(l1, rdfRest, l2, g));
+        index.add(quad(l2, rdfFirst, p2, g));
+        index.add(quad(l2, rdfRest, rdfNil, g));
+        index.add(quad(x, p, lit1, g));
+        index.add(quad(x, p2, lit2, g));
+        const results = [...propertyJoin(index)];
+        expect(results.some(r =>
+            r.rule === 'prp-adp' &&
+            r.quad.predicate.value === owlDifferentFrom.value,
+        )).toBe(false);
     });
 });
 
@@ -662,23 +670,25 @@ describe('prp coverage edge cases', () => {
     it('prp-fp: two objects with same value but different termType → no sameAs (equal values guard)', () => {
         // Covers arr[i].value !== arr[j].value ELSE branch for prp-fp
         const sv = 'sameval';
-        const result = infer(
-            quad(p, rdfType, owlFunctional, g),
-            quad(x, p, namedNode(sv), g),
-            quad(x, p, DataFactory.blankNode(sv), g),
-        );
-        expect(hasTriple(result, namedNode(sv).value, owlSameAs.value, namedNode(sv).value)).toBe(false);
+        // Use propertyJoin directly so eq-ref (now on by default) does not produce the reflexive sameAs.
+        const index = new QuadIndex();
+        index.add(quad(p, rdfType, owlFunctional, g));
+        index.add(quad(x, p, namedNode(sv), g));
+        index.add(quad(x, p, DataFactory.blankNode(sv), g));
+        const results = [...propertyJoin(index)];
+        expect(results.some(r => r.rule === 'prp-fp')).toBe(false);
     });
 
     it('prp-ifp: two subjects with same value but different termType → no sameAs (equal values guard)', () => {
         // Covers arr[i].value !== arr[j].value ELSE branch for prp-ifp
         const sv = 'sameval2';
-        const result = infer(
-            quad(p, rdfType, owlInvFunctional, g),
-            quad(namedNode(sv), p, y, g),
-            quad(DataFactory.blankNode(sv), p, y, g),
-        );
-        expect(hasTriple(result, namedNode(sv).value, owlSameAs.value, namedNode(sv).value)).toBe(false);
+        // Use propertyJoin directly so eq-ref (now on by default) does not produce the reflexive sameAs.
+        const index = new QuadIndex();
+        index.add(quad(p, rdfType, owlInvFunctional, g));
+        index.add(quad(namedNode(sv), p, y, g));
+        index.add(quad(DataFactory.blankNode(sv), p, y, g));
+        const results = [...propertyJoin(index)];
+        expect(results.some(r => r.rule === 'prp-ifp')).toBe(false);
     });
 
     it('prp-trp: x p y, y p x → self-loop x p x guarded (z.value === xv branch)', () => {

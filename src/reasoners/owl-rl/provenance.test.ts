@@ -103,7 +103,7 @@ describe('OwlRlReasoner provenance', () => {
         ) as InferredQuadRecord | undefined;
 
         expect(record).toBeDefined();
-        expect(record?.ruleDescription).toContain('functional data property');
+        expect(record?.ruleDescription).toContain('same value space');
 
         const sourceKeys = collectSourceQuadKeys(record!);
         expect(sourceKeys.has(quadKey(typeTriple))).toBe(true);
@@ -210,7 +210,7 @@ describe('OwlRlReasoner provenance', () => {
         expect(result?.severity).toBe('Violation');
         expect(result?.detail.origin).toBe('inference');
         expect((result?.detail as InferredQuadRecord).rule).toBe('dt-diff');
-        expect((result?.detail as InferredQuadRecord).ruleDescription).toContain('functional data property');
+            expect((result?.detail as InferredQuadRecord).ruleDescription).toContain('same value space');
         expect(result?.detail.quad.subject.value).toBe(OWL_THING);
         expect(result?.detail.quad.predicate.value).toBe(RDFS_SUBCLASS_OF);
         expect(result?.detail.quad.object.value).toBe(OWL_NOTHING);

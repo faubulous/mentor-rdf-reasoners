@@ -220,7 +220,20 @@ npm run test:coverage
 
 ```bash
 npm run bench
+npm run bench:mobibench
 ```
+
+`bench:mobibench` runs OwlRlReasoner against the MobiBench OWL2 RL corpus
+(`ore-small`, files `0.nt` through `188.nt`) and writes a JSON report to
+`benchmarks/mobibench-owl2rl-<timestamp>.json`.
+
+You can tune the run with environment variables:
+
+- `MOBIBENCH_FIRST` / `MOBIBENCH_LAST`: file index range (default `0..188`)
+- `MOBIBENCH_ROUNDS`: measured rounds (default `3`)
+- `MOBIBENCH_WARMUP`: warm-up file count (default `5`)
+- `MOBIBENCH_BASE_URL`: override corpus source URL
+- `MOBIBENCH_SOURCE_GRAPH`: override graph IRI for loaded input triples
 
 ## Contributing
 

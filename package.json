@@ -44,6 +44,7 @@
     "bench": "vitest bench --run",
     "bench:stable": "vitest bench --run",
     "bench:baseline": "node scripts/run-bench-baseline.mjs",
+    "bench:mobibench": "node scripts/run-bench-mobibench.mjs",
     "bench:watch": "vitest bench",
     "build": "tsc",
     "check:pack": "npm pack --dry-run",
