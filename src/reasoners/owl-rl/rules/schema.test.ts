@@ -7,7 +7,7 @@ import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
 import { schemaJoin } from './schema.js';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 
 const { namedNode, quad, blankNode } = DataFactory;
 
@@ -384,7 +384,7 @@ describe('scm walkList edge cases', () => {
 describe('scm coverage edge cases', () => {
     it('no subClassOf triples → ?? [] fallback for scm-sco and scm-eqc2 loops', () => {
         // Must call scmJoin directly since OwlRlReasoner always injects subClassOf axioms
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         const result = [...schemaJoin(index)];
         expect(result.length).toBe(0);
     });

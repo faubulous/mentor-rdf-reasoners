@@ -6,7 +6,7 @@
  */
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, RDFS, OWL, ZERO, ONE, rdf, rdfs, owl } from '../vocabulary.js';
 
@@ -45,7 +45,7 @@ export function* classAxioms(): Iterable<rdfjs.Quad> {
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-classes
  */
-export function* classSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+export function* classSingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const predicateIri = predicate.value;
     const subjectIri   = subject.value;
@@ -184,9 +184,9 @@ export function* classSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-classes
  */
-export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
+export function* classJoin(index: QuadIndex): Iterable<InferenceResult> {
     // cls-int1: c intersectionOf list, x type each component → x type c
-    for (const [classIri, listHeadNodes] of index.byPredSubj.get(OWL.intersectionOf) ?? []) {
+    for (const [classIri, listHeadNodes] of index.byPS.get(OWL.intersectionOf) ?? []) {
         for (const listHeadNode of listHeadNodes) {
             const components = walkRdfList(listHeadNode.value, index);
 
@@ -211,7 +211,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // cls-svf1: c someValuesFrom d on p (d != owl:Thing), x p y, y type d → x type c
-    for (const [classIri, fillerNodes] of index.byPredSubj.get(OWL.someValuesFrom) ?? []) {
+    for (const [classIri, fillerNodes] of index.byPS.get(OWL.someValuesFrom) ?? []) {
         for (const filler of fillerNodes) {
             if (filler.value === OWL.Thing) continue;
 
@@ -235,7 +235,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // cls-avf: c allValuesFrom d on p, x type c, x p y → y type d
-    for (const [classIri, fillerNodes] of index.byPredSubj.get(OWL.allValuesFrom) ?? []) {
+    for (const [classIri, fillerNodes] of index.byPS.get(OWL.allValuesFrom) ?? []) {
         for (const filler of fillerNodes) {
             const propertiesOnRestriction = index.getObjects(OWL.onProperty, classIri);
 
@@ -259,7 +259,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // cls-maxc1: c maxCardinality "0" on p, x type c, x p y → inconsistency
-    for (const [classIri, cardinalityNodes] of index.byPredSubj.get(OWL.maxCardinality) ?? []) {
+    for (const [classIri, cardinalityNodes] of index.byPS.get(OWL.maxCardinality) ?? []) {
         for (const cardinality of cardinalityNodes) {
             if (cardinality.value !== ZERO) continue;
 
@@ -285,7 +285,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // cls-maxc2: c maxCardinality "1" on p, x type c, x p y1, x p y2 → y1 sameAs y2
-    for (const [classIri, cardinalityNodes] of index.byPredSubj.get(OWL.maxCardinality) ?? []) {
+    for (const [classIri, cardinalityNodes] of index.byPS.get(OWL.maxCardinality) ?? []) {
         for (const cardinality of cardinalityNodes) {
             if (cardinality.value !== ONE) continue;
 
@@ -314,7 +314,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // cls-maxqc1/2/3/4: qualified max cardinality constraints
-    for (const [classIri, cardinalityNodes] of index.byPredSubj.get(OWL.maxQualifiedCardinality) ?? []) {
+    for (const [classIri, cardinalityNodes] of index.byPS.get(OWL.maxQualifiedCardinality) ?? []) {
         for (const cardinality of cardinalityNodes) {
             const propertiesOnRestriction = index.getObjects(OWL.onProperty, classIri);
             const scopedClasses           = index.getObjects(OWL.onClass, classIri);
@@ -372,7 +372,7 @@ export function* classJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 }
 
-function walkRdfList(listHeadIri: string, index: TripleIndex): rdfjs.Quad_Object[] {
+function walkRdfList(listHeadIri: string, index: QuadIndex): rdfjs.Quad_Object[] {
     const firstNodes = index.getObjects(RDF.first, listHeadIri);
 
     if (firstNodes.size === 0) return [];

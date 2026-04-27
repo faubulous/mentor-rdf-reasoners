@@ -13,7 +13,7 @@
  */
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, OWL, RDFS, owl, rdfs } from '../vocabulary.js';
 
@@ -37,7 +37,7 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-equality
  */
-export function* equalitySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+export function* equalitySingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const subjectIri   = subject.value;
     const predicateIri = predicate.value;
@@ -56,7 +56,7 @@ export function* equalitySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Itera
         }
 
         // eq-rep-s: for each (x, p2, v) in the graph, emit (y, p2, v)
-        for (const [otherPredicateIri, objects] of index.bySubjPred.get(subjectIri)!) {
+        for (const [otherPredicateIri, objects] of index.bySP.get(subjectIri)!) {
             const otherPredicate = namedNode(otherPredicateIri);
 
             for (const obj of objects) {
@@ -70,7 +70,7 @@ export function* equalitySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Itera
         }
 
         // eq-rep-o: for each (u, p2, x) in the graph, emit (u, p2, y)
-        for (const [otherPredicateIri, subjects] of index.byObjPred.get(subjectIri)!) {
+        for (const [otherPredicateIri, subjects] of index.byOP.get(subjectIri)!) {
             const otherPredicate = namedNode(otherPredicateIri);
 
             for (const subj of subjects) {
@@ -95,9 +95,9 @@ export function* equalitySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Itera
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-equality
  */
-export function* equalityJoin(index: TripleIndex): Iterable<InferenceResult> {
+export function* equalityJoin(index: QuadIndex): Iterable<InferenceResult> {
     // eq-trans: x sameAs y, y sameAs z → x sameAs z
-    for (const [subjectIri, sameAsTargets] of index.byPredSubj.get(OWL.sameAs) ?? []) {
+    for (const [subjectIri, sameAsTargets] of index.byPS.get(OWL.sameAs) ?? []) {
         for (const intermediate of sameAsTargets) {
             const transitiveTargets = index.getObjects(OWL.sameAs, intermediate.value);
 
@@ -116,7 +116,7 @@ export function* equalityJoin(index: TripleIndex): Iterable<InferenceResult> {
 
     // eq-diff2/3: owl:AllDifferent with owl:members or owl:distinctMembers
     for (const listPredicate of [OWL.members, OWL.distinctMembers]) {
-        for (const [allDiffIri, listHeadNodes] of index.byPredSubj.get(listPredicate) ?? []) {
+        for (const [allDiffIri, listHeadNodes] of index.byPS.get(listPredicate) ?? []) {
             for (const listHeadNode of listHeadNodes) {
                 const memberNodes = walkRdfList(listHeadNode.value, index);
 
@@ -146,7 +146,7 @@ export function* equalityJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 }
 
-function walkRdfList(listHeadIri: string, index: TripleIndex): rdfjs.Quad_Object[] {
+function walkRdfList(listHeadIri: string, index: QuadIndex): rdfjs.Quad_Object[] {
     const firstNodes = index.getObjects(RDF.first, listHeadIri);
 
     if (firstNodes.size === 0) return [];

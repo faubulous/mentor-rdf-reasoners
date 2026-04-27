@@ -1,9 +1,9 @@
 import * as rdfjs from '@rdfjs/types';
 import type { InferenceResult } from '../inference-result.js';
-import type { InferredTripleRecord } from '../provenance-record.js';
+import type { InferredQuadRecord } from '../quad-provenance-record.js';
 import { ReasonerBase } from '../reasoner-base.js';
 import type { ReportSeverity } from '../reasoning-report.js';
-import { TripleIndex } from '../triple-index.js';
+import { QuadIndex } from '../quad-index.js';
 import { equalitySingleQuad, equalityJoin } from './rules/equality.js';
 import { classAxiomSingleQuad, classAxiomJoin } from './rules/class-axioms.js';
 import { propertySingleQuad, propertyJoin, propertyAxioms } from './rules/property-semantics.js';
@@ -149,7 +149,7 @@ export class OwlRlReasoner extends ReasonerBase {
         yield* this.axioms();
     }
 
-    protected *inferFromQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+    protected *inferFromQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
         yield* equalitySingleQuad(quad, index);
         yield* propertySingleQuad(quad, index);
         yield* classSingleQuad(quad, index);
@@ -157,7 +157,7 @@ export class OwlRlReasoner extends ReasonerBase {
         yield* schemaSingleQuad(quad, index);
     }
 
-    protected *inferFromIndex(index: TripleIndex): Iterable<InferenceResult> {
+    protected *inferFromIndex(index: QuadIndex): Iterable<InferenceResult> {
         yield* equalityJoin(index);
         yield* propertyJoin(index);
         yield* classJoin(index);
@@ -169,7 +169,7 @@ export class OwlRlReasoner extends ReasonerBase {
         return OWL_RL_RULE_DESCRIPTIONS[rule];
     }
 
-    protected getRecordSeverity(record: InferredTripleRecord): ReportSeverity {
+    protected getRecordSeverity(record: InferredQuadRecord): ReportSeverity {
         return OWL_RL_VIOLATION_RULES.has(record.rule) ? 'Violation' : 'Info';
     }
 }

@@ -1,9 +1,9 @@
 /**
- * Unit tests for TripleIndex.
+ * Unit tests for QuadIndex.
  */
 import { describe, it, expect } from 'vitest';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from './triple-index.js';
+import { QuadIndex } from './quad-index.js';
 
 const { namedNode, blankNode, literal, quad } = DataFactory;
 const dg = DataFactory.defaultGraph();
@@ -19,20 +19,20 @@ function mkQuad(s: any, p: any, o: any) {
     return quad(s, p, o, dg);
 }
 
-describe('TripleIndex.add', () => {
-    it('returns true for a new triple', () => {
-        const index = new TripleIndex();
+describe('QuadIndex.add', () => {
+    it('returns true for a new quad', () => {
+        const index = new QuadIndex();
         expect(index.add(mkQuad(s1, p1, o1))).toBe(true);
     });
 
-    it('returns false for a duplicate triple (same termType)', () => {
-        const index = new TripleIndex();
+    it('returns false for a duplicate quad (same termType)', () => {
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         expect(index.add(mkQuad(s1, p1, o1))).toBe(false);
     });
 
     it('distinguishes NamedNode and BlankNode with same value', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         const nn = namedNode('urn:x');
         const bn = blankNode('urn:x');
         index.add(mkQuad(s1, p1, nn));
@@ -41,9 +41,9 @@ describe('TripleIndex.add', () => {
     });
 });
 
-describe('TripleIndex.getObjects', () => {
+describe('QuadIndex.getObjects', () => {
     it('returns objects for known predicate+subject', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         index.add(mkQuad(s1, p1, o2));
         const result = index.getObjects(p1.value, s1.value);
@@ -51,14 +51,14 @@ describe('TripleIndex.getObjects', () => {
     });
 
     it('returns empty set for unknown predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         expect(index.getObjects(p1.value, s1.value).size).toBe(0);
     });
 });
 
-describe('TripleIndex.getSubjects', () => {
+describe('QuadIndex.getSubjects', () => {
     it('returns subjects for known predicate+object', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         index.add(mkQuad(s2, p1, o1));
         const result = index.getSubjects(p1.value, o1.value);
@@ -66,14 +66,14 @@ describe('TripleIndex.getSubjects', () => {
     });
 
     it('returns empty set for unknown predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         expect(index.getSubjects(p1.value, o1.value).size).toBe(0);
     });
 });
 
-describe('TripleIndex.getObjectsForSubject', () => {
+describe('QuadIndex.getObjectsForSubject', () => {
     it('returns objects for a known subject+predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         index.add(mkQuad(s1, p1, o2));
         const result = index.getObjectsForSubject(s1.value, p1.value);
@@ -81,14 +81,14 @@ describe('TripleIndex.getObjectsForSubject', () => {
     });
 
     it('returns empty set for unknown subject', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         expect(index.getObjectsForSubject(s1.value, p1.value).size).toBe(0);
     });
 });
 
-describe('TripleIndex.getSubjectsForObject', () => {
+describe('QuadIndex.getSubjectsForObject', () => {
     it('returns subjects for a known object+predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         index.add(mkQuad(s2, p1, o1));
         const result = index.getSubjectsForObject(o1.value, p1.value);
@@ -96,14 +96,14 @@ describe('TripleIndex.getSubjectsForObject', () => {
     });
 
     it('returns empty set for unknown object', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         expect(index.getSubjectsForObject(o1.value, p1.value).size).toBe(0);
     });
 });
 
-describe('TripleIndex.pairs', () => {
+describe('QuadIndex.pairs', () => {
     it('yields (subject, object) pairs for a predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         index.add(mkQuad(s2, p1, o2));
         const pairs = [...index.pairs(p1.value)];
@@ -113,27 +113,27 @@ describe('TripleIndex.pairs', () => {
     });
 
     it('yields nothing for an unknown predicate', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         const pairs = [...index.pairs(p2.value)];
         expect(pairs.length).toBe(0);
     });
 });
 
-describe('TripleIndex.has', () => {
-    it('returns true for a present triple', () => {
-        const index = new TripleIndex();
+describe('QuadIndex.has', () => {
+    it('returns true for a present quad', () => {
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         expect(index.has(p1.value, s1.value, o1.value)).toBe(true);
     });
 
-    it('returns false for a missing triple (predicate exists, object differs)', () => {
-        const index = new TripleIndex();
+    it('returns false for a missing quad (predicate exists, object differs)', () => {
+        const index = new QuadIndex();
         index.add(mkQuad(s1, p1, o1));
         expect(index.has(p1.value, s1.value, o2.value)).toBe(false);
     });
 
-    it('returns false for a missing triple (unknown predicate)', () => {
-        const index = new TripleIndex();
+    it('returns false for a missing quad (unknown predicate)', () => {
+        const index = new QuadIndex();
         expect(index.has(p2.value, s1.value, o1.value)).toBe(false);
     });
 });

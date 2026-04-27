@@ -6,7 +6,7 @@ import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { equalityJoin } from './equality.js';
 
 const { namedNode, quad, literal, blankNode } = DataFactory;
@@ -201,7 +201,7 @@ describe('eq-diff2', () => {
         const list = blankNode('direct-dl');
         const tail = blankNode('direct-dtail');
         const ad = blankNode('direct-ad');
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         for (const q of [
             quad(ad, rdfType, allDiff, g),

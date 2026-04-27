@@ -7,7 +7,7 @@ import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { OwlRlReasoner } from '../../owl-rl/index.js';
 import { propertyJoin, propertySingleQuad } from './property-semantics.js';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 
 const { namedNode, quad, blankNode } = DataFactory;
 
@@ -483,7 +483,7 @@ describe('prp-rflx blank node subject', () => {
     it('literal typed as owl:Thing is ignored by the prp-rflx subject guard in propertySingleQuad', () => {
         const reflexiveProperty = namedNode('urn:reflexive-literal');
         const lit = DataFactory.literal('not-a-node');
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         index.add(quad(reflexiveProperty, rdfType, namedNode('http://www.w3.org/2002/07/owl#ReflexiveProperty'), g));
 
@@ -642,7 +642,7 @@ describe('prp coverage edge cases', () => {
     it('no rdf:type triples → ?? [] fallback for all RDF.type join loops', () => {
         // Covers byPredSubj.get(RDF.type) ?? [] right side for prp-fp/ifp/trp/asyp/npa1
         // Must call prpJoin directly because OwlRlReasoner always loads axioms (type triples)
-        const index = new TripleIndex();
+        const index = new QuadIndex();
         const result = [...propertyJoin(index)];
         expect(result.length).toBe(0);
     });
@@ -764,7 +764,7 @@ describe('prp coverage edge cases', () => {
         const y1 = namedNode('urn:direct-y1');
         const y2 = namedNode('urn:direct-y2');
         const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         for (const q of [
             quad(p, rdfType, owlFunctional, g),
@@ -785,7 +785,7 @@ describe('prp coverage edge cases', () => {
         const y1 = namedNode('urn:direct-ifp-y1');
         const y2 = namedNode('urn:direct-ifp-y2');
         const owlDifferentFrom = namedNode('http://www.w3.org/2002/07/owl#differentFrom');
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         for (const q of [
             quad(p, rdfType, owlInvFunctional, g),
@@ -801,7 +801,7 @@ describe('prp coverage edge cases', () => {
     });
 
     it('propertyJoin covers functional-property contrapositive fallthrough when no differentFrom triple exists', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         for (const q of [
             quad(p, rdfType, owlFunctional, g),
@@ -816,7 +816,7 @@ describe('prp coverage edge cases', () => {
     });
 
     it('propertyJoin covers inverse-functional contrapositive fallthrough when no differentFrom triple exists', () => {
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         for (const q of [
             quad(p, rdfType, owlInvFunctional, g),

@@ -1,5 +1,5 @@
 import * as rdfjs from '@rdfjs/types';
-import type { ProvenanceRecord } from './provenance-record.js';
+import type { QuadProvenanceRecord } from './quad-provenance-record.js';
 
 /** SHACL-like severity levels for reasoner report entries. */
 export type ReportSeverity = 'Violation' | 'Warning' | 'Info';
@@ -20,7 +20,7 @@ export interface ReasoningReportResult {
     sourceGraphs: rdfjs.Quad_Graph[];
     targetGraph: rdfjs.Quad_Graph;
     severity: ReportSeverity;
-    detail: ProvenanceRecord;
+    detail: QuadProvenanceRecord;
 }
 
 /** A SHACL-inspired report wrapper for reasoning outcomes. */

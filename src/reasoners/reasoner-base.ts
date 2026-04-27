@@ -1,14 +1,16 @@
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from './triple-index.js';
 import type { InferenceOptions } from './inference-options.js';
 import type { InferenceResult } from './inference-result.js';
-import type { InferredTripleRecord, ProvenanceRecord } from './provenance-record.js';
+import type { InferredQuadRecord, QuadProvenanceRecord } from './quad-provenance-record.js';
+import { QuadIndex } from './quad-index.js';
+import { QuadProvenanceMap } from './quad-provenance-map.js';
 import { Reasoner } from './reasoner.js';
 import { ReasoningReportGenerator } from './reasoning-report-generator.js';
 import type { ReasoningReport, ReasoningReportResult, ReportOptions, ReportSeverity } from './reasoning-report.js';
 
 const createQuad = DataFactory.quad.bind(DataFactory);
+
 const defaultGraphTerm = DataFactory.defaultGraph();
 
 /**
@@ -36,13 +38,13 @@ export abstract class ReasonerBase implements Reasoner {
         const stopWhen = options?.stopWhen;
 
         const inferredQuads: rdfjs.Quad[] = [];
-        const index = new TripleIndex();
+        const index = new QuadIndex();
 
         // Seed the index with source triples.
         // Source triples are always in the index before any inference, so derived
         // triples that duplicate source triples will be rejected by index.add() and
         // will never reach inferredQuads — making a separate sourceKeys check redundant.
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
+        for (const q of this._quadsFromSources(store, sourceGraphs)) {
             index.add(createQuad(q.subject, q.predicate, q.object, defaultGraphTerm));
         }
 
@@ -54,7 +56,7 @@ export abstract class ReasonerBase implements Reasoner {
         // Build the initial delta from all source + axiomatic quads.
         let delta: rdfjs.Quad[] = [];
 
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
+        for (const q of this._quadsFromSources(store, sourceGraphs)) {
             delta.push(createQuad(q.subject, q.predicate, q.object, defaultGraphTerm));
         }
 
@@ -122,62 +124,28 @@ export abstract class ReasonerBase implements Reasoner {
      * @param quad The inferred quad to compute provenance for (only subject, predicate, object are considered; graph is ignored).
      * @return A provenance record containing the derivation chain for the target quad, or undefined if the target quad is not derivable.
      */
-    getProvenanceForQuad(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>, quad: rdfjs.Quad): ProvenanceRecord | undefined {
-        const index = new TripleIndex();
-
-        function termKey(t: rdfjs.Term): string {
-            if (t.termType === 'Literal') {
-                const lit = t as rdfjs.Literal;
-
-                return `L\x00${lit.value}\x00${lit.language || (lit.datatype?.value ?? '')}`;
-            } else {
-                return `${t.termType[0]}\x00${t.value}`;
-            }
-        }
-
-        function quadKey(q: rdfjs.Quad): string {
-            return `${termKey(q.subject)}\x01${termKey(q.predicate)}\x01${termKey(q.object)}`;
-        }
+    getProvenanceForQuad(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>, quad: rdfjs.Quad): QuadProvenanceRecord | undefined {
+        const index = new QuadIndex();
+        const provenanceMap = new QuadProvenanceMap();
 
         const normalizedTarget = createQuad(quad.subject, quad.predicate, quad.object, defaultGraphTerm);
-        const targetKey = quadKey(normalizedTarget);
-        const provenanceMap = new Map<string, ProvenanceRecord>();
+        const targetKey = provenanceMap.keyOf(normalizedTarget);
 
-        const resolvePremises = (antecedents: rdfjs.Quad[]): ProvenanceRecord[] => {
-            return antecedents.map(ant => {
-                const key = quadKey(createQuad(ant.subject, ant.predicate, ant.object, defaultGraphTerm));
+        const sourceMatch = this._indexSeedQuads(index, provenanceMap, 'source', this._quadsFromSources(store, sourceGraphs), targetKey);
 
-                return provenanceMap.get(key) ?? { origin: 'source', triple: ant };
-            });
-        };
-
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
-            const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
-
-            if (index.add(n)) {
-                const record: ProvenanceRecord = { origin: 'source', triple: n };
-
-                provenanceMap.set(quadKey(n), record);
-
-                if (quadKey(n) === targetKey) return record;
-            }
+        if (sourceMatch) {
+            return sourceMatch;
         }
 
-        for (const q of this.axioms()) {
-            const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
+        const axiomMatch = this._indexSeedQuads(index, provenanceMap, 'axiom', this.axioms(), targetKey);
 
-            if (index.add(n)) {
-                const record: ProvenanceRecord = { origin: 'axiom', triple: n };
-
-                provenanceMap.set(quadKey(n), record);
-
-                if (quadKey(n) === targetKey) return record;
-            }
+        if (axiomMatch) {
+            return axiomMatch;
         }
 
         let delta: rdfjs.Quad[] = [];
 
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
+        for (const q of this._quadsFromSources(store, sourceGraphs)) {
             delta.push(createQuad(q.subject, q.predicate, q.object, defaultGraphTerm));
         }
 
@@ -190,51 +158,49 @@ export abstract class ReasonerBase implements Reasoner {
 
             for (const q of delta) {
                 for (const result of this.inferFromQuad(q, index)) {
-                    const n = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
+                    const x = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
 
-                    if (index.add(n)) {
-                        const key = quadKey(n);
+                    if (index.add(x)) {
                         const ruleDescription = this.getRuleDescription(result.rule);
-                        const record: ProvenanceRecord = {
+                        const record: QuadProvenanceRecord = {
                             origin: 'inference',
-                            triple: n,
+                            quad: x,
                             rule: result.rule,
                             ...(ruleDescription ? { ruleDescription } : {}),
-                            premises: resolvePremises(result.antecedents),
+                            premises: provenanceMap.resolvePremises(result.antecedents),
                         };
 
-                        provenanceMap.set(key, record);
+                        const key = provenanceMap.set(record);
 
                         if (key === targetKey) {
                             return record;
                         }
 
-                        nextDelta.push(n);
+                        nextDelta.push(x);
                     }
                 }
             }
 
             for (const result of this.inferFromIndex(index)) {
-                const n = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
+                const q = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
 
-                if (index.add(n)) {
-                    const key = quadKey(n);
+                if (index.add(q)) {
                     const ruleDescription = this.getRuleDescription(result.rule);
-                    const record: ProvenanceRecord = {
+                    const record: QuadProvenanceRecord = {
                         origin: 'inference',
-                        triple: n,
+                        quad: q,
                         rule: result.rule,
                         ...(ruleDescription ? { ruleDescription } : {}),
-                        premises: resolvePremises(result.antecedents),
+                        premises: provenanceMap.resolvePremises(result.antecedents),
                     };
 
-                    provenanceMap.set(key, record);
+                    const key = provenanceMap.set(record);
 
                     if (key === targetKey) {
                         return record;
                     }
 
-                    nextDelta.push(n);
+                    nextDelta.push(q);
                 }
             }
 
@@ -250,54 +216,17 @@ export abstract class ReasonerBase implements Reasoner {
      * Prefer `getProvenanceForQuad()` for editor workflows that need explanation for
      * a specific detected issue.
      */
-    getProvenanceForInferredQuads(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>): ProvenanceRecord[] {
-        const index = new TripleIndex();
+    getProvenanceForInferredQuads(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>): QuadProvenanceRecord[] {
+        const index = new QuadIndex();
+        const provenanceMap = new QuadProvenanceMap();
 
-        // Stable key for an RDF term that preserves term type.
-        function termKey(t: rdfjs.Term): string {
-            if (t.termType === 'Literal') {
-                const lit = t as rdfjs.Literal;
-                return `L\x00${lit.value}\x00${lit.language || (lit.datatype?.value ?? '')}`;
-            }
-            return `${t.termType[0]}\x00${t.value}`;
-        }
-
-        function quadKey(q: rdfjs.Quad): string {
-            return `${termKey(q.subject)}\x01${termKey(q.predicate)}\x01${termKey(q.object)}`;
-        }
-
-        const provenanceMap = new Map<string, ProvenanceRecord>();
-
-        function resolvePremises(antecedents: rdfjs.Quad[]): ProvenanceRecord[] {
-            return antecedents.map(ant => {
-                const key = quadKey(createQuad(ant.subject, ant.predicate, ant.object, defaultGraphTerm));
-
-                return provenanceMap.get(key) ?? { origin: 'source', triple: ant };
-            });
-        }
-
-        // Seed index and provenance map with source triples.
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
-            const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
-
-            if (index.add(n)) {
-                provenanceMap.set(quadKey(n), { origin: 'source', triple: n });
-            }
-        }
-
-        // Seed with profile axioms.
-        for (const q of this.axioms()) {
-            const n = createQuad(q.subject, q.predicate, q.object, defaultGraphTerm);
-
-            if (index.add(n)) {
-                provenanceMap.set(quadKey(n), { origin: 'axiom', triple: n });
-            }
-        }
+        this._indexSeedQuads(index, provenanceMap, 'source', this._quadsFromSources(store, sourceGraphs));
+        this._indexSeedQuads(index, provenanceMap, 'axiom', this.axioms());
 
         // Build the initial delta from all source + axiomatic quads.
         let delta: rdfjs.Quad[] = [];
 
-        for (const q of this._sourceQuads(store, sourceGraphs)) {
+        for (const q of this._quadsFromSources(store, sourceGraphs)) {
             delta.push(createQuad(q.subject, q.predicate, q.object, defaultGraphTerm));
         }
 
@@ -305,7 +234,7 @@ export abstract class ReasonerBase implements Reasoner {
             delta.push(createQuad(q.subject, q.predicate, q.object, defaultGraphTerm));
         }
 
-        const inferredRecords: ProvenanceRecord[] = [];
+        const inferredRecords: QuadProvenanceRecord[] = [];
 
         // Semi-naive fixpoint loop.
         while (delta.length > 0) {
@@ -313,20 +242,22 @@ export abstract class ReasonerBase implements Reasoner {
 
             for (const q of delta) {
                 for (const result of this.inferFromQuad(q, index)) {
-                    const n = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
+                    const x = createQuad(result.quad.subject, result.quad.predicate, result.quad.object, defaultGraphTerm);
 
-                    if (index.add(n)) {
+                    if (index.add(x)) {
                         const ruleDescription = this.getRuleDescription(result.rule);
-                        const record: ProvenanceRecord = {
+                        const record: QuadProvenanceRecord = {
                             origin: 'inference',
-                            triple: n,
+                            quad: x,
                             rule: result.rule,
                             ...(ruleDescription ? { ruleDescription } : {}),
-                            premises: resolvePremises(result.antecedents),
+                            premises: provenanceMap.resolvePremises(result.antecedents),
                         };
-                        provenanceMap.set(quadKey(n), record);
+
+                        provenanceMap.set(record);
                         inferredRecords.push(record);
-                        nextDelta.push(n);
+
+                        nextDelta.push(x);
                     }
                 }
             }
@@ -336,14 +267,14 @@ export abstract class ReasonerBase implements Reasoner {
 
                 if (index.add(n)) {
                     const ruleDescription = this.getRuleDescription(result.rule);
-                    const record: ProvenanceRecord = {
+                    const record: QuadProvenanceRecord = {
                         origin: 'inference',
-                        triple: n,
+                        quad: n,
                         rule: result.rule,
                         ...(ruleDescription ? { ruleDescription } : {}),
-                        premises: resolvePremises(result.antecedents),
+                        premises: provenanceMap.resolvePremises(result.antecedents),
                     };
-                    provenanceMap.set(quadKey(n), record);
+                    provenanceMap.set(record);
                     inferredRecords.push(record);
                     nextDelta.push(n);
                 }
@@ -389,7 +320,7 @@ export abstract class ReasonerBase implements Reasoner {
         options?: ReportOptions,
     ): ReasoningReport {
         const targetGraph = options?.targetGraph ?? sourceGraphs[0] ?? defaultGraphTerm;
-        
+
         return this._reportGenerator.generateAll(
             this.getProvenanceForInferredQuads(store, sourceGraphs),
             sourceGraphs,
@@ -407,7 +338,7 @@ export abstract class ReasonerBase implements Reasoner {
     /**
      * Severity policy for inferred provenance nodes. Override in subclasses.
      */
-    protected getRecordSeverity(_record: InferredTripleRecord): ReportSeverity {
+    protected getRecordSeverity(_record: InferredQuadRecord): ReportSeverity {
         return 'Info';
     }
 
@@ -416,12 +347,46 @@ export abstract class ReasonerBase implements Reasoner {
      * @param store The RDF dataset to query.
      * @param sourceGraphs The graphs to iterate over.
      */
-    private *_sourceQuads(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>): Iterable<rdfjs.Quad> {
+    private *_quadsFromSources(store: rdfjs.DatasetCore, sourceGraphs: ReadonlyArray<rdfjs.Quad_Graph>): Iterable<rdfjs.Quad> {
         for (const graph of sourceGraphs) {
             for (const q of store.match(null, null, null, graph)) {
                 yield q;
             }
         }
+    }
+
+    /**
+     * Populate the index and provenance map with quads from the specified iterable, marking 
+     * them with the given origin.
+     * @param quads The quads to process.
+     * @param origin The origin to assign to the quads.
+     * @param index The index to populate.
+     * @param provenanceMap The provenance map to populate.
+     * @param targetKey An optional key to stop processing when matched.
+     * @returns A provenance record if a quad matching the targetKey was added, or undefined otherwise.
+     */
+    private _indexSeedQuads(
+        index: QuadIndex,
+        provenanceMap: QuadProvenanceMap,
+        origin: 'source' | 'axiom',
+        quads: Iterable<rdfjs.Quad>,
+        targetKey?: string
+    ): QuadProvenanceRecord | undefined {
+        for (const quad of quads) {
+            const normalizedQuad = createQuad(quad.subject, quad.predicate, quad.object, defaultGraphTerm);
+
+            if (!index.add(normalizedQuad)) {
+                continue;
+            }
+
+            const { key, record } = provenanceMap.addSeedRecord(origin, normalizedQuad);
+
+            if (key === targetKey) {
+                return record;
+            }
+        }
+
+        return undefined;
     }
 
     /**
@@ -434,11 +399,11 @@ export abstract class ReasonerBase implements Reasoner {
      * Single-quad rules. Called once per quad in the current delta.
      * Yield any triples derivable from this quad (optionally using the index for lookups).
      */
-    protected abstract inferFromQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult>;
+    protected abstract inferFromQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult>;
 
     /**
      * Join rules requiring patterns across multiple quads.
      * Called once per fixpoint round over the full index.
      */
-    protected abstract inferFromIndex(index: TripleIndex): Iterable<InferenceResult>;
+    protected abstract inferFromIndex(index: QuadIndex): Iterable<InferenceResult>;
 }

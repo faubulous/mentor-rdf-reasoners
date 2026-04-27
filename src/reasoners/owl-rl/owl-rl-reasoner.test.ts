@@ -5,7 +5,7 @@ import * as rdfjs from '@rdfjs/types';
 const { namedNode, quad } = DataFactory;
 import { OwlRlReasoner } from '../index.js';
 import { ReasonerBase } from '../reasoner-base.js';
-import { TripleIndex } from '../triple-index.js';
+import { QuadIndex } from '../quad-index.js';
 
 const sourceGraph = namedNode('https://example.org/ontology');
 
@@ -60,8 +60,8 @@ describe('OwlRlReasoner', () => {
 describe('ReasonerBase default axioms', () => {
     it('base axioms() yields nothing when not overridden', () => {
         class MinimalReasoner extends ReasonerBase {
-            protected *inferFromQuad(_quad: ReturnType<typeof quad>, _index: TripleIndex) {}
-            protected *inferFromIndex(_index: TripleIndex) {}
+            protected *inferFromQuad(_quad: ReturnType<typeof quad>, _index: QuadIndex) {}
+            protected *inferFromIndex(_index: QuadIndex) {}
         }
         const reasoner = new MinimalReasoner();
         const store = RdfStore.createDefault().asDataset();

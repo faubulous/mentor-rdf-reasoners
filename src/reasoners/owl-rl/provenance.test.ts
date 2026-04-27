@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { RdfStore } from 'rdf-stores';
 import DataFactory from '@rdfjs/data-model';
 import * as rdfjs from '@rdfjs/types';
-import type { InferredTripleRecord, ProvenanceRecord } from '../provenance-record.js';
+import type { InferredQuadRecord, QuadProvenanceRecord } from '../quad-provenance-record.js';
 import { OwlRlReasoner } from './index.js';
 
 const { namedNode, quad, literal } = DataFactory;
@@ -31,11 +31,11 @@ function quadKey(q: ReturnType<typeof quad>): string {
     return `${q.subject.value} ${q.predicate.value} ${q.object.termType}:${q.object.value}`;
 }
 
-function findRecord(records: ProvenanceRecord[], s: string, p: string, o: string): ProvenanceRecord | undefined {
-    return records.find(r => r.triple.subject.value === s && r.triple.predicate.value === p && r.triple.object.value === o);
+function findRecord(records: QuadProvenanceRecord[], s: string, p: string, o: string): QuadProvenanceRecord | undefined {
+    return records.find(r => r.quad.subject.value === s && r.quad.predicate.value === p && r.quad.object.value === o);
 }
 
-function collectRules(record: ProvenanceRecord): string[] {
+function collectRules(record: QuadProvenanceRecord): string[] {
     if (record.origin === 'inference') {
         return [record.rule, ...record.premises.flatMap(collectRules)];
     }
@@ -43,12 +43,12 @@ function collectRules(record: ProvenanceRecord): string[] {
     return [record.origin];
 }
 
-function collectSourceQuadKeys(record: ProvenanceRecord): Set<string> {
+function collectSourceQuadKeys(record: QuadProvenanceRecord): Set<string> {
     const keys = new Set<string>();
 
-    const visit = (node: ProvenanceRecord): void => {
+    const visit = (node: QuadProvenanceRecord): void => {
         if (node.origin === 'source') {
-            keys.add(quadKey(node.triple as ReturnType<typeof quad>));
+            keys.add(quadKey(node.quad as ReturnType<typeof quad>));
         }
 
         if (node.origin === 'inference') {
@@ -72,14 +72,14 @@ describe('OwlRlReasoner provenance', () => {
         const record = findRecord(records, b.value, OWL_SAME_AS, a.value);
         expect(record).toBeDefined();
         expect(record?.origin).toBe('inference');
-        const inferred = record as InferredTripleRecord;
+        const inferred = record as InferredQuadRecord;
         expect(inferred.rule).toBe('eq-sym');
         expect(inferred.ruleDescription).toContain('symmetry');
         expect(inferred.premises.length).toBe(1);
         expect(inferred.premises[0].origin).toBe('source');
-        expect(inferred.premises[0].triple.subject.value).toBe(a.value);
-        expect(inferred.premises[0].triple.predicate.value).toBe(OWL_SAME_AS);
-        expect(inferred.premises[0].triple.object.value).toBe(b.value);
+        expect(inferred.premises[0].quad.subject.value).toBe(a.value);
+        expect(inferred.premises[0].quad.predicate.value).toBe(OWL_SAME_AS);
+        expect(inferred.premises[0].quad.object.value).toBe(b.value);
     });
 
     it('records dt-diff inconsistency with full source chain', () => {
@@ -97,10 +97,10 @@ describe('OwlRlReasoner provenance', () => {
         const record = records.find(r =>
             r.origin === 'inference' &&
             r.rule === 'dt-diff' &&
-            r.triple.subject.value === OWL_THING &&
-            r.triple.predicate.value === RDFS_SUBCLASS_OF &&
-            r.triple.object.value === OWL_NOTHING,
-        ) as InferredTripleRecord | undefined;
+            r.quad.subject.value === OWL_THING &&
+            r.quad.predicate.value === RDFS_SUBCLASS_OF &&
+            r.quad.object.value === OWL_NOTHING,
+        ) as InferredQuadRecord | undefined;
 
         expect(record).toBeDefined();
         expect(record?.ruleDescription).toContain('functional data property');
@@ -142,7 +142,7 @@ describe('OwlRlReasoner provenance', () => {
         const record = findRecord(records, a.value, OWL_SAME_AS, c.value);
         expect(record).toBeDefined();
         expect(record?.origin).toBe('inference');
-        expect(['eq-trans', 'eq-rep-o', 'eq-rep-s']).toContain((record as InferredTripleRecord).rule);
+        expect(['eq-trans', 'eq-rep-o', 'eq-rep-s']).toContain((record as InferredQuadRecord).rule);
 
         const sourceKeys = collectSourceQuadKeys(record!);
         expect(sourceKeys.has(quadKey(ab))).toBe(true);
@@ -172,9 +172,9 @@ describe('OwlRlReasoner provenance', () => {
 
         const explanation = reasoner.getProvenanceForQuad(store, [sourceGraph], inconsistency!);
         expect(explanation).toBeDefined();
-        expect(explanation?.triple.subject.value).toBe(OWL_THING);
-        expect(explanation?.triple.predicate.value).toBe(RDFS_SUBCLASS_OF);
-        expect(explanation?.triple.object.value).toBe(OWL_NOTHING);
+        expect(explanation?.quad.subject.value).toBe(OWL_THING);
+        expect(explanation?.quad.predicate.value).toBe(RDFS_SUBCLASS_OF);
+        expect(explanation?.quad.object.value).toBe(OWL_NOTHING);
 
         const sourceKeys = collectSourceQuadKeys(explanation!);
         expect(sourceKeys.has(quadKey(typeTriple))).toBe(true);
@@ -209,11 +209,11 @@ describe('OwlRlReasoner provenance', () => {
         expect(result?.targetGraph.value).toBe(targetGraph.value);
         expect(result?.severity).toBe('Violation');
         expect(result?.detail.origin).toBe('inference');
-        expect((result?.detail as InferredTripleRecord).rule).toBe('dt-diff');
-        expect((result?.detail as InferredTripleRecord).ruleDescription).toContain('functional data property');
-        expect(result?.detail.triple.subject.value).toBe(OWL_THING);
-        expect(result?.detail.triple.predicate.value).toBe(RDFS_SUBCLASS_OF);
-        expect(result?.detail.triple.object.value).toBe(OWL_NOTHING);
+        expect((result?.detail as InferredQuadRecord).rule).toBe('dt-diff');
+        expect((result?.detail as InferredQuadRecord).ruleDescription).toContain('functional data property');
+        expect(result?.detail.quad.subject.value).toBe(OWL_THING);
+        expect(result?.detail.quad.predicate.value).toBe(RDFS_SUBCLASS_OF);
+        expect(result?.detail.quad.object.value).toBe(OWL_NOTHING);
     });
 
     it('builds a SHACL-like report wrapper with consistent flag', () => {

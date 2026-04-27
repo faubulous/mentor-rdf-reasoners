@@ -3,7 +3,7 @@ import DataFactory from '@rdfjs/data-model';
 import type * as rdfjs from '@rdfjs/types';
 import { infer } from './inference-result.js';
 import { ReasonerBase } from './reasoner-base.js';
-import { TripleIndex } from './triple-index.js';
+import { QuadIndex } from './quad-index.js';
 
 const namedNode = DataFactory.namedNode.bind(DataFactory);
 const createQuad = DataFactory.quad.bind(DataFactory);
@@ -56,19 +56,19 @@ function makeDataset(...quads: rdfjs.Quad[]): rdfjs.DatasetCore {
 }
 
 class HooklessReasoner extends ReasonerBase {
-    protected *inferFromQuad(inputQuad: rdfjs.Quad, _index: TripleIndex) {
+    protected *inferFromQuad(inputQuad: rdfjs.Quad, _index: QuadIndex) {
         if (inputQuad.predicate.value === p.value) {
             yield infer(createQuad(inputQuad.subject, derivedPredicate, inputQuad.object), 'custom-rule', hiddenAntecedent);
         }
     }
 
-    protected *inferFromIndex(_index: TripleIndex) { }
+    protected *inferFromIndex(_index: QuadIndex) { }
 }
 
 class IndexOnlyReasoner extends ReasonerBase {
-    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: TripleIndex) { }
+    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: QuadIndex) { }
 
-    protected *inferFromIndex(index: TripleIndex) {
+    protected *inferFromIndex(index: QuadIndex) {
         if (index.has(p.value, s.value, o.value)) {
             yield infer(createQuad(s, namedNode('urn:joined'), o), 'joined-rule', hiddenAntecedent);
         }
@@ -80,9 +80,9 @@ class AxiomReasoner extends ReasonerBase {
         yield createQuad(namedNode('urn:axiom-s'), namedNode('urn:axiom-p'), namedNode('urn:axiom-o'));
     }
 
-    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: TripleIndex) { }
+    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: QuadIndex) { }
 
-    protected *inferFromIndex(_index: TripleIndex) { }
+    protected *inferFromIndex(_index: QuadIndex) { }
 }
 
 class DuplicateAxiomReasoner extends ReasonerBase {
@@ -92,15 +92,15 @@ class DuplicateAxiomReasoner extends ReasonerBase {
         yield axiom;
     }
 
-    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: TripleIndex) { }
+    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: QuadIndex) { }
 
-    protected *inferFromIndex(_index: TripleIndex) { }
+    protected *inferFromIndex(_index: QuadIndex) { }
 }
 
 class CrossGraphReasoner extends ReasonerBase {
-    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: TripleIndex) { }
+    protected *inferFromQuad(_inputQuad: rdfjs.Quad, _index: QuadIndex) { }
 
-    protected *inferFromIndex(index: TripleIndex) {
+    protected *inferFromIndex(index: QuadIndex) {
         if (index.has(schemaPredicate.value, s.value, p.value) && index.has(p.value, s.value, o.value)) {
             yield infer(createQuad(s, namedNode('urn:cross-graph-derived'), o), 'cross-graph-rule');
         }
@@ -121,7 +121,7 @@ describe('ReasonerBase provenance and reports', () => {
         expect(inferred.ruleDescription).toBeUndefined();
         expect(inferred.premises).toHaveLength(1);
         expect(inferred.premises[0].origin).toBe('source');
-        expect(inferred.premises[0].triple.subject.value).toBe(hiddenAntecedent.subject.value);
+        expect(inferred.premises[0].quad.subject.value).toBe(hiddenAntecedent.subject.value);
     });
 
     it('uses default Info severity and sourceGraph as targetGraph when building a report', () => {
@@ -149,7 +149,7 @@ describe('ReasonerBase provenance and reports', () => {
         expect(reportResult).toBeDefined();
         expect(reportResult?.severity).toBe('Info');
         expect(reportResult?.detail.origin).toBe('source');
-        expect(reportResult?.detail.triple.object.value).toBe('value');
+        expect(reportResult?.detail.quad.object.value).toBe('value');
     });
 
     it('handles literal targets even when the literal has no datatype set', () => {
@@ -181,8 +181,8 @@ describe('ReasonerBase provenance and reports', () => {
         const record = reasoner.getProvenanceForQuad(dataset, [sourceGraph], sourceQuad);
 
         expect(record?.origin).toBe('source');
-        expect(record?.triple.object.termType).toBe('Literal');
-        expect(record?.triple.object.value).toBe('raw');
+        expect(record?.quad.object.termType).toBe('Literal');
+        expect(record?.quad.object.value).toBe('raw');
     });
 
     it('getProvenanceForInferredQuads covers fallback premises and omitted ruleDescription branches', () => {
@@ -242,7 +242,7 @@ describe('ReasonerBase provenance and reports', () => {
         const record = reasoner.getProvenanceForQuad(dataset, [sourceGraph], target);
 
         expect(record?.origin).toBe('axiom');
-        expect(record?.triple.subject.value).toBe('urn:axiom-s');
+        expect(record?.quad.subject.value).toBe('urn:axiom-s');
     });
 
     it('returns undefined for reportFor when the requested target is not derivable', () => {

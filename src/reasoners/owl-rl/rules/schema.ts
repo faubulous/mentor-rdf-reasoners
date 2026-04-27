@@ -12,7 +12,7 @@
  */
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, RDFS, OWL, rdf, rdfs, owl } from '../vocabulary.js';
 
@@ -37,7 +37,7 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-schema
  */
-export function* schemaSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+export function* schemaSingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const predicateIri = predicate.value;
 
@@ -108,9 +108,9 @@ export function* schemaSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterabl
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-schema
  */
-export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
+export function* schemaJoin(index: QuadIndex): Iterable<InferenceResult> {
     // scm-sco: c1 subClassOf c2, c2 subClassOf c3 → c1 subClassOf c3
-    for (const [class1Iri, superClasses] of index.byPredSubj.get(RDFS.subClassOf) ?? []) {
+    for (const [class1Iri, superClasses] of index.byPS.get(RDFS.subClassOf) ?? []) {
         for (const class2 of superClasses) {
             for (const class3 of index.getObjects(RDFS.subClassOf, class2.value)) {
                 if (class3.value !== class1Iri) {
@@ -126,7 +126,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-eqc2: c1 subClassOf c2 AND c2 subClassOf c1 → c1 equivalentClass c2
-    for (const [class1Iri, superClasses] of index.byPredSubj.get(RDFS.subClassOf) ?? []) {
+    for (const [class1Iri, superClasses] of index.byPS.get(RDFS.subClassOf) ?? []) {
         const class1Term = namedNode(class1Iri);
 
         for (const class2 of superClasses) {
@@ -142,7 +142,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-spo: p1 subPropertyOf p2, p2 subPropertyOf p3 → p1 subPropertyOf p3
-    for (const [property1Iri, superProperties] of index.byPredSubj.get(RDFS.subPropertyOf) ?? []) {
+    for (const [property1Iri, superProperties] of index.byPS.get(RDFS.subPropertyOf) ?? []) {
         for (const property2 of superProperties) {
             for (const property3 of index.getObjects(RDFS.subPropertyOf, property2.value)) {
                 if (property3.value !== property1Iri) {
@@ -158,7 +158,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-eqp2: p1 subPropertyOf p2, p2 subPropertyOf p1 → p1 equivalentProperty p2
-    for (const [property1Iri, superProperties] of index.byPredSubj.get(RDFS.subPropertyOf) ?? []) {
+    for (const [property1Iri, superProperties] of index.byPS.get(RDFS.subPropertyOf) ?? []) {
         const property1Term = namedNode(property1Iri);
 
         for (const property2 of superProperties) {
@@ -174,7 +174,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-dom1: p domain c1, c1 subClassOf c2 → p domain c2
-    for (const [propertyIri, domainClasses] of index.byPredSubj.get(RDFS.domain) ?? []) {
+    for (const [propertyIri, domainClasses] of index.byPS.get(RDFS.domain) ?? []) {
         const propertyTerm = namedNode(propertyIri);
 
         for (const class1 of domainClasses) {
@@ -190,7 +190,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-dom2: p2 domain c, p1 subPropertyOf p2 → p1 domain c
-    for (const [property2Iri, domainClasses] of index.byPredSubj.get(RDFS.domain) ?? []) {
+    for (const [property2Iri, domainClasses] of index.byPS.get(RDFS.domain) ?? []) {
         for (const domainClass of domainClasses) {
             for (const property1 of index.getSubjects(RDFS.subPropertyOf, property2Iri)) {
                 yield infer(
@@ -204,7 +204,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-rng1: p range c1, c1 subClassOf c2 → p range c2
-    for (const [propertyIri, rangeClasses] of index.byPredSubj.get(RDFS.range) ?? []) {
+    for (const [propertyIri, rangeClasses] of index.byPS.get(RDFS.range) ?? []) {
         const propertyTerm = namedNode(propertyIri);
 
         for (const class1 of rangeClasses) {
@@ -220,7 +220,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-rng2: p2 range c, p1 subPropertyOf p2 → p1 range c
-    for (const [property2Iri, rangeClasses] of index.byPredSubj.get(RDFS.range) ?? []) {
+    for (const [property2Iri, rangeClasses] of index.byPS.get(RDFS.range) ?? []) {
         for (const rangeClass of rangeClasses) {
             for (const property1 of index.getSubjects(RDFS.subPropertyOf, property2Iri)) {
                 yield infer(
@@ -234,7 +234,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-hv: c1 hasValue v on p1, c2 hasValue v on p2, p1 subPropertyOf p2 → c1 subClassOf c2
-    for (const [class1Iri, values1] of index.byPredSubj.get(OWL.hasValue) ?? []) {
+    for (const [class1Iri, values1] of index.byPS.get(OWL.hasValue) ?? []) {
         const class1Term = namedNode(class1Iri);
         const properties1 = index.getObjects(OWL.onProperty, class1Iri);
 
@@ -265,7 +265,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
 
     // scm-svf1: c1 someValuesFrom d1 on p, c2 someValuesFrom d2 on p, d1 subClassOf d2 → c1 subClassOf c2
     // scm-svf2: c1 someValuesFrom d on p1, c2 someValuesFrom d on p2, p1 subPropertyOf p2 → c1 subClassOf c2
-    for (const [class1Iri, fillers1] of index.byPredSubj.get(OWL.someValuesFrom) ?? []) {
+    for (const [class1Iri, fillers1] of index.byPS.get(OWL.someValuesFrom) ?? []) {
         const class1Term = namedNode(class1Iri);
         const properties1 = index.getObjects(OWL.onProperty, class1Iri);
 
@@ -319,7 +319,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
 
     // scm-avf1: c1 allValuesFrom d1 on p, c2 allValuesFrom d2 on p, d1 subClassOf d2 → c1 subClassOf c2
     // scm-avf2: c1 allValuesFrom d on p1, c2 allValuesFrom d on p2, p1 subPropertyOf p2 → c2 subClassOf c1 (contravariant)
-    for (const [class1Iri, fillers1] of index.byPredSubj.get(OWL.allValuesFrom) ?? []) {
+    for (const [class1Iri, fillers1] of index.byPS.get(OWL.allValuesFrom) ?? []) {
         const class1Term = namedNode(class1Iri);
         const properties1 = index.getObjects(OWL.onProperty, class1Iri);
 
@@ -375,7 +375,7 @@ export function* schemaJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 }
 
-function walkRdfList(listHeadIri: string, index: TripleIndex): rdfjs.Quad_Object[] {
+function walkRdfList(listHeadIri: string, index: QuadIndex): rdfjs.Quad_Object[] {
     const firstNodes = index.getObjects(RDF.first, listHeadIri);
 
     if (firstNodes.size === 0) return [];

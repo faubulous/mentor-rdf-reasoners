@@ -6,7 +6,7 @@
  */
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, RDFS, OWL, rdf, rdfs, owl } from '../vocabulary.js';
 
@@ -42,7 +42,7 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-properties
  */
-export function* propertySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+export function* propertySingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const predicateIri = predicate.value;
     const subjectIri   = subject.value;
@@ -197,12 +197,12 @@ export function* propertySingleQuad(quad: rdfjs.Quad, index: TripleIndex): Itera
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-properties
  */
-export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
+export function* propertyJoin(index: QuadIndex): Iterable<InferenceResult> {
     // prp-fp: p FunctionalProperty, x p y1, x p y2 → y1 sameAs y2
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.FunctionalProperty)) continue;
 
-        const bySubject = index.byPredSubj.get(propertyIri);
+        const bySubject = index.byPS.get(propertyIri);
 
         if (!bySubject) continue;
 
@@ -240,10 +240,10 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-fp contrapositive: p FunctionalProperty, Y1 p X1, Y2 p X2, X1 differentFrom X2 → Y1 differentFrom Y2
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.FunctionalProperty)) continue;
 
-        const bySubject = index.byPredSubj.get(propertyIri);
+        const bySubject = index.byPS.get(propertyIri);
 
         if (!bySubject) continue;
 
@@ -280,10 +280,10 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-ifp: p InverseFunctionalProperty, y1 p x, y2 p x → y1 sameAs y2
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.InverseFunctionalProperty)) continue;
 
-        const byObject = index.byPredObj.get(propertyIri);
+        const byObject = index.byPO.get(propertyIri);
 
         if (!byObject) continue;
 
@@ -306,10 +306,10 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-trp: p TransitiveProperty, x p y, y p z → x p z
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.TransitiveProperty)) continue;
 
-        const bySubject = index.byPredSubj.get(propertyIri);
+        const bySubject = index.byPS.get(propertyIri);
 
         if (!bySubject) continue;
 
@@ -334,10 +334,10 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-asyp: p AsymmetricProperty, x p y, y p x → inconsistency
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.AsymmetricProperty)) continue;
 
-        const bySubject = index.byPredSubj.get(propertyIri);
+        const bySubject = index.byPS.get(propertyIri);
 
         if (!bySubject) continue;
 
@@ -358,15 +358,15 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     // prp-pdw: p1 propertyDisjointWith p2, x p1 y, x p2 z
     //   → inconsistency if y = z (same object in both relations)
     //   → y differentFrom z if y ≠ z (objects in disjoint relations must be distinct)
-    for (const [firstPropertyIri, disjointProperties] of index.byPredSubj.get(OWL.propertyDisjointWith) ?? []) {
+    for (const [firstPropertyIri, disjointProperties] of index.byPS.get(OWL.propertyDisjointWith) ?? []) {
         for (const disjointProperty of disjointProperties) {
             const secondPropertyIri = disjointProperty.value;
-            const bySubjectForFirst = index.byPredSubj.get(firstPropertyIri);
+            const bySubjectForFirst = index.byPS.get(firstPropertyIri);
 
             if (!bySubjectForFirst) continue;
 
             for (const [subjectIri, firstObjects] of bySubjectForFirst) {
-                const secondObjects = index.byPredSubj.get(secondPropertyIri)?.get(subjectIri);
+                const secondObjects = index.byPS.get(secondPropertyIri)?.get(subjectIri);
 
                 if (!secondObjects) continue;
 
@@ -399,7 +399,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-adp: AllDisjointProperties members list
-    for (const [allDisjointIri, listHeadNodes] of index.byPredSubj.get(OWL.members) ?? []) {
+    for (const [allDisjointIri, listHeadNodes] of index.byPS.get(OWL.members) ?? []) {
         if (!index.has(RDF.type, allDisjointIri, OWL.AllDisjointProperties)) continue;
 
         for (const listHeadNode of listHeadNodes) {
@@ -409,12 +409,12 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
                 for (let j = i + 1; j < memberProperties.length; j++) {
                     const firstPropertyIri  = memberProperties[i].value;
                     const secondPropertyIri = memberProperties[j].value;
-                    const bySubjectForFirst = index.byPredSubj.get(firstPropertyIri);
+                    const bySubjectForFirst = index.byPS.get(firstPropertyIri);
 
                     if (!bySubjectForFirst) continue;
 
                     for (const [subjectIri, firstObjects] of bySubjectForFirst) {
-                        const secondObjects = index.byPredSubj.get(secondPropertyIri)?.get(subjectIri);
+                        const secondObjects = index.byPS.get(secondPropertyIri)?.get(subjectIri);
 
                         if (!secondObjects) continue;
 
@@ -451,10 +451,10 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-ifp contrapositive: p InverseFunctionalProperty, Y1 p X1, Y2 p X2, Y1 differentFrom Y2 → X1 differentFrom X2
-    for (const [propertyIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [propertyIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, propertyIri, OWL.InverseFunctionalProperty)) continue;
 
-        const byObject = index.byPredObj.get(propertyIri);
+        const byObject = index.byPO.get(propertyIri);
 
         if (!byObject) continue;
 
@@ -490,7 +490,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-spo2: p propertyChainAxiom list, chain steps → direct triple
-    for (const [propertyIri, listHeadNodes] of index.byPredSubj.get(OWL.propertyChainAxiom) ?? []) {
+    for (const [propertyIri, listHeadNodes] of index.byPS.get(OWL.propertyChainAxiom) ?? []) {
         const propertyTerm = namedNode(propertyIri);
 
         for (const listHeadNode of listHeadNodes) {
@@ -498,7 +498,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
 
             if (chainProperties.length < 2) continue;
 
-            for (const start of (index.byPredSubj.get(chainProperties[0].value) ?? new Map())) {
+            for (const start of (index.byPS.get(chainProperties[0].value) ?? new Map())) {
                 const [startSubjectIri] = start as [string, Set<rdfjs.Quad_Object>];
                 const reachableEnds = followPropertyChainWithPath(startSubjectIri, chainProperties.map(chainProperty => chainProperty.value), 0, index);
 
@@ -515,7 +515,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // scm-chain-trans: p propertyChainAxiom [p, p] → p rdf:type owl:TransitiveProperty
-    for (const [propertyIri, listHeadNodes] of index.byPredSubj.get(OWL.propertyChainAxiom) ?? []) {
+    for (const [propertyIri, listHeadNodes] of index.byPS.get(OWL.propertyChainAxiom) ?? []) {
         for (const listHeadNode of listHeadNodes) {
             const chain = walkRdfList(listHeadNode.value, index);
 
@@ -530,7 +530,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-key: c hasKey list, x type c, y type c, all key values equal → x sameAs y
-    for (const [classIri, listHeadNodes] of index.byPredSubj.get(OWL.hasKey) ?? []) {
+    for (const [classIri, listHeadNodes] of index.byPS.get(OWL.hasKey) ?? []) {
         for (const listHeadNode of listHeadNodes) {
             const keyProperties = walkRdfList(listHeadNode.value, index).map(keyProperty => keyProperty.value);
             const instances     = [...(index.getSubjects(RDF.type, classIri))];
@@ -555,7 +555,7 @@ export function* propertyJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 
     // prp-npa1: NegativePropertyAssertion + actual triple → inconsistency
-    for (const [assertionIri] of index.byPredSubj.get(RDF.type) ?? []) {
+    for (const [assertionIri] of index.byPS.get(RDF.type) ?? []) {
         if (!index.has(RDF.type, assertionIri, OWL.NegativePropertyAssertion)) continue;
 
         for (const sourceIndividual of index.getObjects(OWL.sourceIndividual, assertionIri)) {
@@ -606,7 +606,7 @@ export function* propertyAxioms(): Iterable<rdfjs.Quad> {
     yield DataFactory.quad(owl.differentFrom, rdf.type, owl.SymmetricProperty);
 }
 
-function walkRdfList(listHeadIri: string, index: TripleIndex): rdfjs.Quad_Object[] {
+function walkRdfList(listHeadIri: string, index: QuadIndex): rdfjs.Quad_Object[] {
     const firstNodes = index.getObjects(RDF.first, listHeadIri);
 
     if (firstNodes.size === 0) return [];
@@ -627,7 +627,7 @@ function* followPropertyChainWithPath(
     currentIri: string,
     chainPropertyIris: string[],
     step: number,
-    index: TripleIndex,
+    index: QuadIndex,
     path: rdfjs.Quad[] = [],
 ): Iterable<{ endIri: string; path: rdfjs.Quad[] }> {
     if (step === chainPropertyIris.length - 1) {
@@ -653,7 +653,7 @@ function* followPropertyChainWithPath(
     }
 }
 
-function allKeyValuesMatch(firstInstanceIri: string, secondInstanceIri: string, keyPropertyIris: string[], index: TripleIndex): boolean {
+function allKeyValuesMatch(firstInstanceIri: string, secondInstanceIri: string, keyPropertyIris: string[], index: QuadIndex): boolean {
     for (const keyPropertyIri of keyPropertyIris) {
         const firstValues  = index.getObjects(keyPropertyIri, firstInstanceIri);
         const secondValues = index.getObjects(keyPropertyIri, secondInstanceIri);

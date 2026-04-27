@@ -8,7 +8,7 @@
  */
 import * as rdfjs from '@rdfjs/types';
 import DataFactory from '@rdfjs/data-model';
-import { TripleIndex } from '../../triple-index.js';
+import { QuadIndex } from '../../quad-index.js';
 import { infer, type InferenceResult } from '../../inference-result.js';
 import { RDF, RDFS, OWL, rdf, rdfs, owl } from '../vocabulary.js';
 
@@ -29,7 +29,7 @@ function makeTriple(subject: rdfjs.Quad_Subject, predicate: rdfjs.Quad_Predicate
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-class-axioms
  */
-export function* classAxiomSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Iterable<InferenceResult> {
+export function* classAxiomSingleQuad(quad: rdfjs.Quad, index: QuadIndex): Iterable<InferenceResult> {
     const { subject, predicate, object } = quad;
     const predicateIri = predicate.value;
     const subjectIri   = subject.value;
@@ -133,8 +133,8 @@ export function* classAxiomSingleQuad(quad: rdfjs.Quad, index: TripleIndex): Ite
  *
  * @see https://www.w3.org/TR/owl2-profiles/#tab-rules-class-axioms
  */
-export function* classAxiomJoin(index: TripleIndex): Iterable<InferenceResult> {
-    for (const [allDisjointIri, listHeads] of index.byPredSubj.get(OWL.members) ?? []) {
+export function* classAxiomJoin(index: QuadIndex): Iterable<InferenceResult> {
+    for (const [allDisjointIri, listHeads] of index.byPS.get(OWL.members) ?? []) {
         if (!index.has(RDF.type, allDisjointIri, OWL.AllDisjointClasses)) continue;
 
         for (const listHead of listHeads) {
@@ -165,7 +165,7 @@ export function* classAxiomJoin(index: TripleIndex): Iterable<InferenceResult> {
     }
 }
 
-function walkRdfList(listHeadIri: string, index: TripleIndex): rdfjs.Quad_Object[] {
+function walkRdfList(listHeadIri: string, index: QuadIndex): rdfjs.Quad_Object[] {
     const firstNodes = index.getObjects(RDF.first, listHeadIri);
 
     if (firstNodes.size === 0) return [];
